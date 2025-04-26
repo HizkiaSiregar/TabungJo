@@ -5,20 +5,17 @@ const SignIn = ({navigation}) => {
   return (
     <View style={styles.pageContainer}>
       <View style={styles.contentContainer}>
-        {/* Logo */}
         <Image
           source={require('../../assets/LogoTabungJo.png')}
           style={styles.logo}
           resizeMode="contain"
         />
 
-        {/* Input Username */}
         <View style={styles.inputWrapper}>
           <Text style={styles.label}>Username</Text>
-          <TextInput style={styles.input} placeholder="" placeholderTextColor="#C4C4C4" />
+          <TextInput style={styles.input} placeholder= "" placeholderTextColor="#C4C4C4" />
         </View>
 
-        {/* Input Password */}
         <View style={styles.inputWrapper}>
           <Text style={styles.label}>Password</Text>
           <TextInput
@@ -29,12 +26,10 @@ const SignIn = ({navigation}) => {
           />
         </View>
 
-        {/* Button Login */}
         <TouchableOpacity style={styles.loginButton}>
           <Text style={styles.loginButtonText}>Login</Text>
         </TouchableOpacity>
 
-        {/* Button Sign Up */}
         <TouchableOpacity
           style={styles.signupButton}
           onPress={() => navigation.navigate('SignUp')}
@@ -51,7 +46,7 @@ export default SignIn;
 const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
-    backgroundColor: '#FF6F61', // Background pink
+    backgroundColor: '#FF6F61', 
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -60,15 +55,15 @@ const styles = StyleSheet.create({
     height: 956,
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
-    paddingTop: 112, // Logo posisi Y = 112
+    paddingTop: 112,
   },
   logo: {
-    width: 350, // Sesuai figma: 350px
-    height: 350, // Sesuai figma: 261px
+    width: 350,
+    height: 350, 
     marginBottom: -50,
   },
   inputWrapper: {
-    width: 350,
+    width: 320,
     marginBottom: 10,
   },
   label: {
@@ -85,8 +80,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   loginButton: {
-    backgroundColor: '#F9B233', // Kuning
-    width: 350,
+    backgroundColor: '#F9B233', 
+    width: 320,
     height: 45,
     borderRadius: 4,
     justifyContent: 'center',
@@ -100,8 +95,8 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
   signupButton: {
-    backgroundColor: '#003B49', // Biru gelap
-    width: 350,
+    backgroundColor: '#003B49', 
+    width: 320,
     height: 45,
     borderRadius: 4,
     justifyContent: 'center',
