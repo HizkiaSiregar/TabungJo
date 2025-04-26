@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {Button, Gap} from '../../components/atoms';
 import {Header, TextInput} from '../../components/molecules';
-// import {NullPhoto} from '../../assets';
+import {NullPhoto} from '../../assets';
 
 const SignUp = ({navigation}) => {
   return (
@@ -22,7 +22,7 @@ const SignUp = ({navigation}) => {
             <View style={styles.addPhoto}>
               <TouchableOpacity activeOpacity={0.5}>
                 <Text style={styles.addPhotoLabel}>Add Photo</Text>
-                {/* <Image source={NullPhoto} style={styles.avatar} /> */}
+                <Image source={NullPhoto} style={styles.avatar} />
               </TouchableOpacity>
             </View>
           </View>
