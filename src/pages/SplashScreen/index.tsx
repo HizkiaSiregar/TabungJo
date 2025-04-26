@@ -1,18 +1,30 @@
-// pages/SplashScreen.tsx
-import {StyleSheet, Text, View, Image} from 'react-native';
-import React, {useEffect} from 'react';
-import {Logo} from '../../assets'; // Import dari index.ts
+import {StyleSheet, View, Animated} from 'react-native';
+import React, {useEffect, useRef} from 'react';
+import {Logo} from '../../assets';
 
 const SplashScreen = ({navigation}) => {
+  const scaleAnim = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
-    setTimeout(() => {
+    Animated.timing(scaleAnim, {
+      toValue: 1, // 100% ukuran normal
+      duration: 1500,
+      useNativeDriver: true,
+    }).start();
+
+    const timeout = setTimeout(() => {
       navigation.replace('SignIn');
     }, 3000);
-  }, []);
+
+    return () => clearTimeout(timeout);
+  }, [scaleAnim, navigation]);
 
   return (
     <View style={styles.container}>
-      <Image source={Logo} style={styles.logo} />
+      <Animated.Image
+        source={Logo}
+        style={[styles.logo, {transform: [{scale: scaleAnim}]}]}
+      />
     </View>
   );
 };
