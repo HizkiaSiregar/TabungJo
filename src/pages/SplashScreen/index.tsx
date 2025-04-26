@@ -1,28 +1,18 @@
 
-import {StyleSheet, View, Image, Animated} from 'react-native';
-import React, {useEffect, useRef} from 'react';
+import {StyleSheet, Text, View, Image} from 'react-native';
+import React, {useEffect} from 'react';
 import {Logo} from '../../assets'; 
 
 const SplashScreen = ({navigation}) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current; 
-
   useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 2300, 
-      useNativeDriver: true,
-    }).start();
-
-    const timeout = setTimeout(() => {
+    setTimeout(() => {
       navigation.replace('SignIn');
-    }, 3000);
-
-    return () => clearTimeout(timeout);
-  }, [fadeAnim, navigation]);
+    }, 4500);
+  }, []);
 
   return (
     <View style={styles.container}>
-      <Animated.Image source={Logo} style={[styles.logo, {opacity: fadeAnim}]} />
+      <Image source={Logo} style={styles.logo} />
     </View>
   );
 };
@@ -38,7 +28,8 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 350,
-    height: 261,
+    height: 395,
     resizeMode: 'contain',
+    marginBottom: 50,
   },
 });
