@@ -1,46 +1,57 @@
-import React from 'react';
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Text,
-} from 'react-native';
-import {Button, Gap} from '../../components/atoms';
-import {Header, TextInput} from '../../components/molecules';
-import {NullPhoto} from '../../assets';
+import React, { useState } from 'react';
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
 
-const SignUp = ({navigation}) => {
+const SignUp = () => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   return (
-    <ScrollView style={styles.container}>
-      <Header title="Sign Up" />
-      <Gap height={24} />
-      <View style={styles.contentWrapper}>
-        <View style={styles.profileContainer}>
-          <View style={styles.profile}>
-            <View style={styles.addPhoto}>
-              <TouchableOpacity activeOpacity={0.5}>
-                <Text style={styles.addPhotoLabel}>Add Photo</Text>
-                <Image source={NullPhoto} style={styles.avatar} />
-              </TouchableOpacity>
-            </View>
-          </View>
+    <ScrollView contentContainerStyle={styles.pageContainer}>
+      <View style={styles.contentContainer}>
+        <Image
+          source={require('../../assets/LogoTabungJo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+
+        <View style={styles.inputWrapper}>
+          <Text style={styles.label}>Username</Text>
+          <TextInput
+            style={styles.input}
+            placeholder=""
+            placeholderTextColor="#C4C4C4"
+            value={username}
+            onChangeText={setUsername}
+          />
         </View>
-        <Gap height={26} />
-        <TextInput label="Full Name" placeholder="Type your full name" />
-        <Gap height={16} />
-        <TextInput
-          label="Email Address"
-          placeholder="Type your email address"
-        />
-        <Gap height={16} />
-        <TextInput label="Password" placeholder="Type your password" />
-        <Gap height={24} />
-        <Button
-          label="Continue"
-          onPress={() => navigation.navigate('SignIn')}
-        />
+
+        <View style={styles.inputWrapper}>
+          <Text style={styles.label}>Email Address</Text>
+          <TextInput
+            style={styles.input}
+            placeholder=""
+            placeholderTextColor="#C4C4C4"
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
+
+        <View style={styles.inputWrapper}>
+          <Text style={styles.label}>Password</Text>
+          <TextInput
+            style={styles.input}
+            placeholder=""
+            placeholderTextColor="#C4C4C4"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+        </View>
+
+        <TouchableOpacity style={styles.createButton}>
+          <Text style={styles.createButtonText}>Create</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -49,46 +60,53 @@ const SignUp = ({navigation}) => {
 export default SignUp;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentWrapper: {
-    backgroundColor: '#FFFFFF',
-    flex: 1,
-    paddingHorizontal: 24,
-  },
-  profileContainer: {
-    marginTop: 26,
-    alignItems: 'center',
-  },
-  profile: {
+  pageContainer: {
+    flexGrow: 1,
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
-    justifyContent: 'center',
-    height: 110,
-    width: 110,
-    borderRadius: 110 / 2,
-    borderWidth: 1,
-    borderColor: '#8D92A3',
-    borderStyle: 'dashed',
+    justifyContent: 'flex-start', // ganti jadi flex-start
+    paddingTop: 60, // tambahkan jarak atas
+    paddingHorizontal: 20,
   },
-  addPhoto: {
-    backgroundColor: '#F0F0F0',
-    width: 90,
-    height: 90,
-    borderRadius: 90 / 2,
-    justifyContent: 'center',
+  contentContainer: {
+    width: 320,
     alignItems: 'center',
   },
-  addPhotoLabel: {
-    fontFamily: 'Poppins-Light',
+  logo: {
+    width: 250,
+    height: 250,
+    marginBottom: 20, // atur lebih pas
+  },
+  inputWrapper: {
+    width: '100%',
+    marginBottom: 15, // kasih jarak antar field
+  },
+  label: {
     fontSize: 14,
-    width: 40,
-    textAlign: 'center',
+    fontWeight: 'bold',
+    marginBottom: 6,
+    color: '#000000',
   },
-  avatar: {
-    height: 90,
-    width: 90,
-    borderRadius: 90 / 2,
+  input: {
+    borderWidth: 1,
+    borderColor: '#000000',
+    height: 40,
+    borderRadius: 4,
+    paddingHorizontal: 10,
+    backgroundColor: '#FFFFFF',
+  },
+  createButton: {
+    backgroundColor: '#F9B233',
+    width: '100%',
+    height: 45,
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30,
+  },
+  createButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000000',
   },
 });
