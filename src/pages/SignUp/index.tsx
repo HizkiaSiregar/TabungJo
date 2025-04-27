@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
+import { Image, StyleSheet, Text, TextInput, View, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import Button from '../../components/atoms/Button'; // 👈 Import button atom
 
-const SignUp = ({ navigation }) => {
+const SignUp = () => {
+  const navigation = useNavigation();
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleCreateAccount = () => {
+    navigation.navigate('SignIn' as never);
+  };  
 
   return (
     <ScrollView contentContainerStyle={styles.pageContainer}>
@@ -49,12 +57,13 @@ const SignUp = ({ navigation }) => {
           />
         </View>
 
-        <TouchableOpacity
-          style={styles.createButton}
-          onPress={() => navigation.navigate('AddSavings')} // <--- navigasi ke SignIn
-        >
-          <Text style={styles.createButtonText}>Create</Text>
-        </TouchableOpacity>
+        {/* Ganti TouchableOpacity jadi Button dari components/atoms */}
+        <Button
+          title="Create"
+          onPress={handleCreateAccount}
+          backgroundColor="#F9B233"
+          textColor="#000000"
+        />
       </View>
     </ScrollView>
   );
@@ -82,7 +91,7 @@ const styles = StyleSheet.create({
   },
   inputWrapper: {
     width: '100%',
-    marginBottom: 15, 
+    marginBottom: 10, 
   },
   label: {
     fontSize: 14,
@@ -97,19 +106,5 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingHorizontal: 10,
     backgroundColor: '#FFFFFF',
-  },
-  createButton: {
-    backgroundColor: '#F9B233',
-    width: '100%',
-    height: 45,
-    borderRadius: 6,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 34,
-  },
-  createButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#000000',
   },
 });
