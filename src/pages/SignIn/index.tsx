@@ -1,10 +1,14 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import { Image, StyleSheet, Text, TextInput, View, ScrollView } from 'react-native';
+import Button from '../../components/atoms/Button'; // ✅ Import Button
+import { useNavigation } from '@react-navigation/native';
 
-const SignIn = ({navigation}) => {
+const SignIn = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.pageContainer}>
-      <View style={styles.contentContainer}>
+      <ScrollView contentContainerStyle={styles.contentContainer}>
         <Image
           source={require('../../assets/LogoTabungJo.png')}
           style={styles.logo}
@@ -13,7 +17,7 @@ const SignIn = ({navigation}) => {
 
         <View style={styles.inputWrapper}>
           <Text style={styles.label}>Username</Text>
-          <TextInput style={styles.input} placeholder= "" placeholderTextColor="#C4C4C4" />
+          <TextInput style={styles.input} placeholder="" placeholderTextColor="#C4C4C4" />
         </View>
 
         <View style={styles.inputWrapper}>
@@ -26,17 +30,22 @@ const SignIn = ({navigation}) => {
           />
         </View>
 
-        <TouchableOpacity style={styles.loginButton}>
-          <Text style={styles.loginButtonText}>Login</Text>
-        </TouchableOpacity>
+        {/* Pakai komponen Button */}
+        <Button
+          title="Login"
+          onPress={() => navigation.navigate('AddSavings' as never)}
+          backgroundColor="#F9B233"
+          textColor="#000000"
+          style={{ marginTop: 70 }}
+        />
 
-        <TouchableOpacity
-          style={styles.signupButton}
-          onPress={() => navigation.navigate('SignUp')}
-        >
-          <Text style={styles.signupButtonText}>Sign Up</Text>
-        </TouchableOpacity>
-      </View>
+        <Button
+          title="Sign Up"
+          onPress={() => navigation.navigate('SignUp' as never)}
+          backgroundColor="#003B49"
+          textColor="#FFFFFF"
+        />
+      </ScrollView>
     </View>
   );
 };
@@ -46,20 +55,22 @@ export default SignIn;
 const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
-    backgroundColor: '#FF6F61', 
+    backgroundColor: '#FF6F61',
     alignItems: 'center',
     justifyContent: 'center',
   },
   contentContainer: {
-    width: 440,
-    height: 956,
-    backgroundColor: '#FFFFFF',
+    flexGrow: 1,
     alignItems: 'center',
-    paddingTop: 112,
+    justifyContent: 'center',
+    paddingVertical: 50,
+    backgroundColor: '#FFFFFF',
+    width: 365,
+    paddingTop: 1
   },
   logo: {
     width: 350,
-    height: 350, 
+    height: 350,
     marginBottom: -50,
   },
   inputWrapper: {
@@ -78,34 +89,5 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 4,
     paddingHorizontal: 10,
-  },
-  loginButton: {
-    backgroundColor: '#F9B233', 
-    width: 320,
-    height: 45,
-    borderRadius: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 70,
-    marginBottom: 1,
-  },
-  loginButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#000000',
-  },
-  signupButton: {
-    backgroundColor: '#003B49', 
-    width: 320,
-    height: 45,
-    borderRadius: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  signupButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
   },
 });

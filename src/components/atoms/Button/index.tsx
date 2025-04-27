@@ -1,29 +1,35 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
+import { TouchableOpacity, Text, StyleSheet, GestureResponderEvent } from 'react-native';
 
-const Button = ({label, color = '#02CF8E', textColor = '#020202', onPress}) => {
+interface ButtonProps {
+  title: string;
+  onPress: (event: GestureResponderEvent) => void;
+  backgroundColor?: string;
+  textColor?: string;
+  style?: object;
+}
+
+const Button: React.FC<ButtonProps> = ({ title, onPress, backgroundColor = '#F9B233', textColor = '#000000', style }) => {
   return (
-    <TouchableOpacity
-      style={styles.button(color)}
-      activeOpacity={0.5}
-      onPress={onPress}>
-      <Text style={styles.label(textColor)}>{label}</Text>
+    <TouchableOpacity style={[styles.button, { backgroundColor }, style]} onPress={onPress} activeOpacity={0.8}>
+      <Text style={[styles.text, { color: textColor }]}>{title}</Text>
     </TouchableOpacity>
   );
 };
 
-export default Button;
-
 const styles = StyleSheet.create({
-  button: color => ({
-    backgroundColor: color,
-    borderRadius: 8,
-    paddingVertical: 12,
-  }),
-  label: textColor => ({
-    textAlign: 'center',
-    fontFamily: 'Poppins-Medium',
-    fontSize: 14,
-    color: textColor,
-  }),
+  button: {
+    width: 320,
+    height: 45,
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
+
+export default Button;
