@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
 
-const SignUp = () => {
+const SignUp = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -49,7 +49,10 @@ const SignUp = () => {
           />
         </View>
 
-        <TouchableOpacity style={styles.createButton}>
+        <TouchableOpacity
+          style={styles.createButton}
+          onPress={() => navigation.navigate('SignIn')} // <--- navigasi ke SignIn
+        >
           <Text style={styles.createButtonText}>Create</Text>
         </TouchableOpacity>
       </View>
@@ -64,8 +67,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
-    justifyContent: 'flex-start', // ganti jadi flex-start
-    paddingTop: 60, // tambahkan jarak atas
+    justifyContent: 'flex-start',
+    paddingTop: 20, 
     paddingHorizontal: 20,
   },
   contentContainer: {
@@ -74,12 +77,12 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 250,
-    height: 250,
-    marginBottom: 20, // atur lebih pas
+    height: 300,
+    marginBottom: -20, 
   },
   inputWrapper: {
     width: '100%',
-    marginBottom: 15, // kasih jarak antar field
+    marginBottom: 15, 
   },
   label: {
     fontSize: 14,
@@ -102,7 +105,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 34,
   },
   createButtonText: {
     fontSize: 16,
