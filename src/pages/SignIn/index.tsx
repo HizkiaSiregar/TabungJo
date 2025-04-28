@@ -54,7 +54,7 @@ export default SignIn;
 const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
-    backgroundColor: '#FF6F61',
+    backgroundColor: '#FFFFFF', // ✅ fixed here, no more pink
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -63,9 +63,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 50,
-    backgroundColor: '#FFFFFF',
-    width: 365,
-    paddingTop: 1
+    width: '100%', // ✅ full width so no weird background on sides
   },
   logo: {
     width: 350,
