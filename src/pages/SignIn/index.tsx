@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image, StyleSheet, Text, TextInput, View, ScrollView } from 'react-native';
-import Button from '../../components/atoms/Button'; // ✅ Import Button
+import Button from '../../components/atoms/Button'; 
 import { useNavigation } from '@react-navigation/native';
 
 const SignIn = () => {
@@ -30,7 +30,6 @@ const SignIn = () => {
           />
         </View>
 
-        {/* Pakai komponen Button */}
         <Button
           title="Login"
           onPress={() => navigation.navigate('AddSavings' as never)}

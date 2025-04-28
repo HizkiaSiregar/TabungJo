@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, Text, TextInput, View, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Button from '../../components/atoms/Button'; // 👈 Import button atom
+import Button from '../../components/atoms/Button';
 
 const SignUp = () => {
   const navigation = useNavigation();
