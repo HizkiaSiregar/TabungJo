@@ -1,16 +1,15 @@
 // src/pages/Profile/index.js
-import React, {useState} from 'react';
-import {StyleSheet, View, SafeAreaView, ScrollView} from 'react-native';
+import React from 'react';
+import {StyleSheet, View, SafeAreaView, ScrollView, Text, TouchableOpacity} from 'react-native';
 import {Button, Gap} from '../../components/atoms';
 import Header from '../../components/molecules/Header';
 import FormInput from '../../components/molecules/FormInput';
 import ProfilePhoto from '../../components/molecules/ProfilePhoto';
 
 const Profile = ({navigation}) => {
-  console.log('Rendering Profile');
-  
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
+  // Static values that cannot be changed
+  const username = 'UserTabungJo';
+  const email = 'usertabungjo@example.com';
   
   const handleResetData = () => {
     console.log('Navigate to ConfirmDeleteProfile');
@@ -24,11 +23,23 @@ const Profile = ({navigation}) => {
   
   const handleReturnHome = () => {
     console.log('Returning to home');
-    navigation.navigate('HomeEmpty');
+    navigation.navigate('HomeWithGoals');
   };
   
   const handleChangePhoto = () => {
     console.log('Change photo');
+  };
+
+  // Custom component to render static input
+  const StaticInput = ({label, value}) => {
+    return (
+      <View style={styles.staticInputContainer}>
+        <Text style={styles.label}>{label}</Text>
+        <View style={styles.staticInputWrapper}>
+          <Text style={styles.staticInput}>{value}</Text>
+        </View>
+      </View>
+    );
   };
 
   return (
@@ -47,21 +58,9 @@ const Profile = ({navigation}) => {
           
           <Gap height={20} />
           
-          {/* Form Inputs */}
-          <FormInput
-            label="Username"
-            placeholder=""
-            value={username}
-            onChangeText={setUsername}
-          />
-          
-          <FormInput
-            label="Email"
-            placeholder=""
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-          />
+          {/* Static Inputs */}
+          <StaticInput label="Username" value={username} />
+          <StaticInput label="Email" value={email} />
           
           <Gap height={20} />
           
@@ -116,5 +115,30 @@ const styles = StyleSheet.create({
   photoContainer: {
     alignItems: 'center',
     marginTop: 20,
+  },
+  staticInputContainer: {
+    width: '100%',
+    alignSelf: 'center',
+    marginBottom: 18,
+  },
+  label: {
+    fontSize: 13,
+    fontFamily: 'Inter-SemiBold',
+    fontWeight: '600',
+    marginBottom: 6,
+    color: '#000000',
+  },
+  staticInputWrapper: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#0F3E48',
+    borderRadius: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    backgroundColor: '#F5F5F5',
+  },
+  staticInput: {
+    fontFamily: 'Inter-Regular',
+    color: '#000000',
   },
 });
