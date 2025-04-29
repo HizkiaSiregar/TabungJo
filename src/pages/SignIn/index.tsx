@@ -37,14 +37,14 @@ const SignIn = ({navigation}) => {
         <View style={styles.formContainer}>
           <FormInput
             label="Username"
-            placeholder="Enter your username"
+            placeholder=""
             value={username}
             onChangeText={setUsername}
           />
           
           <FormInput
             label="Password"
-            placeholder="Enter your password"
+            placeholder=""
             value={password}
             onChangeText={setPassword}
             secureTextEntry={true}

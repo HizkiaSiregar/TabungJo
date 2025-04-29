@@ -30,20 +30,20 @@ const SignUp = ({navigation}) => {
           {/* Form Input */}
           <FormInput
             label="Username"
-            placeholder="Enter your username"
+            placeholder=""
             value={username}
             onChangeText={setUsername}
           />
           <FormInput
             label="Email Address"
-            placeholder="Enter your email address"
+            placeholder=""
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
           />
           <FormInput
             label="Password"
-            placeholder="Enter your password"
+            placeholder=""
             value={password}
             onChangeText={setPassword}
             secureTextEntry={true}
