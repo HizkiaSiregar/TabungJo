@@ -1,3 +1,4 @@
+// src/components/molecules/Header/index.js
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
@@ -18,7 +19,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   title: {
-    fontFamily: 'Poppins-Medium',
-    fontSize: 22,
+    fontFamily: 'Inter-ExtraBold',
+    fontSize: 40,
+    fontWeight: '800',
+    fontStyle: 'italic',
   },
 });

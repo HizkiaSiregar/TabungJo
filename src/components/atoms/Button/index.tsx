@@ -1,35 +1,33 @@
+// src/components/atoms/Button/index.js
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, GestureResponderEvent } from 'react-native';
+import {TouchableOpacity, Text, StyleSheet} from 'react-native';
 
-interface ButtonProps {
-  title: string;
-  onPress: (event: GestureResponderEvent) => void;
-  backgroundColor?: string;
-  textColor?: string;
-  style?: object;
-}
-
-const Button: React.FC<ButtonProps> = ({ title, onPress, backgroundColor = '#F9B233', textColor = '#000000', style }) => {
+const Button = ({label, color = '#FBC028', textColor = '#000000', onPress}) => {
   return (
-    <TouchableOpacity style={[styles.button, { backgroundColor }, style]} onPress={onPress} activeOpacity={0.8}>
-      <Text style={[styles.text, { color: textColor }]}>{title}</Text>
+    <TouchableOpacity
+      style={[styles.button, {backgroundColor: color}]}
+      activeOpacity={0.7}
+      onPress={onPress}>
+      <Text style={[styles.label, {color: textColor}]}>{label}</Text>
     </TouchableOpacity>
   );
 };
 
+export default Button;
+
 const styles = StyleSheet.create({
   button: {
-    width: 320,
-    height: 45,
-    borderRadius: 4,
+    borderRadius: 8,
+    paddingVertical: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 10,
+    height: 53,
+    width: 372,
   },
-  text: {
-    fontSize: 16,
-    fontWeight: 'bold',
+  label: {
+    textAlign: 'center',
+    fontFamily: 'Inter-SemiBold',
+    fontSize: 20,
+    fontWeight: '600',
   },
 });
-
-export default Button;

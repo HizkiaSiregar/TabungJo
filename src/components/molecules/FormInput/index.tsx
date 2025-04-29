@@ -1,20 +1,19 @@
 // src/components/molecules/FormInput/index.js
 import React from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import {StyleSheet, Text, TextInput, View} from 'react-native';
 
-const FormInput = ({ 
-  label, 
-  placeholder, 
-  value, 
-  onChangeText, 
-  secureTextEntry, 
+const FormInput = ({
+  label,
+  placeholder,
+  value,
+  onChangeText,
+  secureTextEntry,
   keyboardType = 'default',
-  style
 }) => {
   return (
-    <View style={[styles.container, style]}>
+    <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
-      <TextInput 
+      <TextInput
         style={styles.input}
         placeholder={placeholder}
         value={value}
@@ -30,21 +29,21 @@ export default FormInput;
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 20,
+    marginBottom: 16,
   },
   label: {
-    fontFamily: 'Inter-SemiBold',
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'Inter-SemiBold',
+    fontWeight: '600',
+    marginBottom: 6,
     color: '#000000',
-    marginBottom: 8,
   },
   input: {
-    height: 50,
     borderWidth: 1,
     borderColor: '#0F3E48',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    fontSize: 16,
+    borderRadius: 0,
+    padding: 10,
+    height: 46,
+    fontFamily: 'Inter-Regular',
   },
 });

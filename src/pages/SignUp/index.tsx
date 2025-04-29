@@ -1,110 +1,84 @@
-import React, { useState } from 'react';
-import { Image, StyleSheet, Text, TextInput, View, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Button from '../../components/atoms/Button';
+// src/pages/SignUp/index.js
+import React, {useState} from 'react';
+import {StyleSheet, View, Text, SafeAreaView, ScrollView} from 'react-native';
+import {Button, Gap} from '../../components/atoms';
+import {FormInput, Header} from '../../components/molecules';
 
-const SignUp = () => {
-  const navigation = useNavigation();
+const SignUp = ({navigation}) => {
+  console.log('Rendering SignUp');
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleCreateAccount = () => {
-    navigation.navigate('SignIn' as never);
-  };  
+  const handleSignUp = () => {
+    console.log('Sign Up');
+    // In a real app, you would create account here
+
+    // Navigate to SignIn after account creation
+    navigation.navigate('SignIn');
+  };
 
   return (
-    <ScrollView contentContainerStyle={styles.pageContainer}>
-      <View style={styles.contentContainer}>
-        <Image
-          source={require('../../assets/LogoTabungJo.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container}>
+        <Header title="Sign Up" />
 
-        <View style={styles.inputWrapper}>
-          <Text style={styles.label}>Username</Text>
-          <TextInput
-            style={styles.input}
-            placeholder=""
-            placeholderTextColor="#C4C4C4"
+        <View style={styles.content}>
+          <Gap height={20} />
+
+          <FormInput
+            label="Username"
+            placeholder="Enter your username"
             value={username}
             onChangeText={setUsername}
           />
-        </View>
 
-        <View style={styles.inputWrapper}>
-          <Text style={styles.label}>Email Address</Text>
-          <TextInput
-            style={styles.input}
-            placeholder=""
-            placeholderTextColor="#C4C4C4"
+          <FormInput
+            label="Email Address"
+            placeholder="Enter your email address"
             value={email}
             onChangeText={setEmail}
+            keyboardType="email-address"
           />
-        </View>
 
-        <View style={styles.inputWrapper}>
-          <Text style={styles.label}>Password</Text>
-          <TextInput
-            style={styles.input}
-            placeholder=""
-            placeholderTextColor="#C4C4C4"
-            secureTextEntry
+          <FormInput
+            label="Password"
+            placeholder="Enter your password"
             value={password}
             onChangeText={setPassword}
+            secureTextEntry={true}
           />
-        </View>
 
-        {/* Ganti TouchableOpacity jadi Button dari components/atoms */}
-        <Button
-          title="Create"
-          onPress={handleCreateAccount}
-          backgroundColor="#F9B233"
-          textColor="#000000"
-        />
-      </View>
-    </ScrollView>
+          <Gap height={30} />
+
+          <Button
+            label="Create Account"
+            onPress={handleSignUp}
+            color="#FBC028"
+            textColor="#000000"
+          />
+
+          <Gap height={30} />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 export default SignUp;
 
 const styles = StyleSheet.create({
-  pageContainer: {
-    flexGrow: 1,
+  safeArea: {
+    flex: 1,
     backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    paddingTop: 20, 
-    paddingHorizontal: 20,
   },
-  contentContainer: {
-    width: 320,
-    alignItems: 'center',
-  },
-  logo: {
-    width: 250,
-    height: 300,
-    marginBottom: -20, 
-  },
-  inputWrapper: {
-    width: '100%',
-    marginBottom: 10, 
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 6,
-    color: '#000000',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#000000',
-    height: 40,
-    borderRadius: 4,
-    paddingHorizontal: 10,
+  container: {
+    flex: 1,
     backgroundColor: '#FFFFFF',
+  },
+  content: {
+    paddingHorizontal: 24,
+    paddingBottom: 40,
   },
 });

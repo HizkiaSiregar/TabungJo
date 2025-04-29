@@ -1,21 +1,23 @@
 // App.js
 import React from 'react';
-import SplashScreen from './src/pages/SplashScreen';
-import SignUp from './src/pages/SignUp';
-import SignIn from './src/pages/SignIn';
-import Profile from './src/pages/Profile';
-import ConfirmDeleteProfile from './src/pages/ConfirmDeleteProfile';
-
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import FlashMessage from 'react-native-flash-message';
+import SplashScreen from './src/pages/SplashScreen';
+import SignIn from './src/pages/SignIn';
+import SignUp from './src/pages/SignUp';
+import HomeEmpty from './src/pages/HomeEmpty';
+import Profile from './src/pages/Profile';
+import AddGoals from './src/pages/AddGoals';
+import ConfirmDeleteProfile from './src/pages/ConfirmDeleteProfile';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
+  console.log('Rendering App');
+  
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="SplashScreen">
         <Stack.Screen
           name="SplashScreen"
           component={SplashScreen}
@@ -32,8 +34,18 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
+          name="HomeEmpty"
+          component={HomeEmpty}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
           name="Profile"
           component={Profile}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AddGoals"
+          component={AddGoals}
           options={{headerShown: false}}
         />
         <Stack.Screen
@@ -42,7 +54,6 @@ const App = () => {
           options={{headerShown: false}}
         />
       </Stack.Navigator>
-      <FlashMessage position="top" />
     </NavigationContainer>
   );
 };

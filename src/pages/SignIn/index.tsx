@@ -1,90 +1,98 @@
-import React from 'react';
-import { Image, StyleSheet, Text, TextInput, View, ScrollView } from 'react-native';
-import Button from '../../components/atoms/Button'; 
-import { useNavigation } from '@react-navigation/native';
+// src/pages/SignIn/index.js
+import React, {useState} from 'react';
+import {StyleSheet, View, Text, SafeAreaView, Image, ScrollView} from 'react-native';
+import {Button, Gap} from '../../components/atoms';
+import {FormInput} from '../../components/molecules';
 
-const SignIn = () => {
-  const navigation = useNavigation();
+const SignIn = ({navigation}) => {
+  console.log('Rendering SignIn');
+  
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignIn = () => {
+    console.log('Sign In');
+    // In a real app, you would validate credentials here
+    
+    // Navigate to HomeEmpty after login
+    navigation.replace('HomeEmpty');
+  };
+
+  const handleSignUp = () => {
+    console.log('Navigate to SignUp');
+    navigation.navigate('SignUp');
+  };
 
   return (
-    <View style={styles.pageContainer}>
-      <ScrollView contentContainerStyle={styles.contentContainer}>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Image
           source={require('../../assets/LogoTabungJo.png')}
           style={styles.logo}
           resizeMode="contain"
         />
-
-        <View style={styles.inputWrapper}>
-          <Text style={styles.label}>Username</Text>
-          <TextInput style={styles.input} placeholder="" placeholderTextColor="#C4C4C4" />
-        </View>
-
-        <View style={styles.inputWrapper}>
-          <Text style={styles.label}>Password</Text>
-          <TextInput
-            style={styles.input}
-            placeholder=""
-            placeholderTextColor="#C4C4C4"
-            secureTextEntry
+        
+        <Gap height={30} />
+        
+        <View style={styles.formContainer}>
+          <FormInput
+            label="Username"
+            placeholder="Enter your username"
+            value={username}
+            onChangeText={setUsername}
+          />
+          
+          <FormInput
+            label="Password"
+            placeholder="Enter your password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={true}
+          />
+          
+          <Gap height={30} />
+          
+          <Button
+            label="Login"
+            onPress={handleSignIn}
+            color="#FBC028"
+            textColor="#000000"
+          />
+          
+          <Gap height={15} />
+          
+          <Button
+            label="Sign Up"
+            onPress={handleSignUp}
+            color="#0F3E48"
+            textColor="#FFFFFF"
           />
         </View>
-
-        <Button
-          title="Login"
-          onPress={() => navigation.navigate('AddSavings' as never)}
-          backgroundColor="#F9B233"
-          textColor="#000000"
-          style={{ marginTop: 70 }}
-        />
-
-        <Button
-          title="Sign Up"
-          onPress={() => navigation.navigate('SignUp' as never)}
-          backgroundColor="#003B49"
-          textColor="#FFFFFF"
-        />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default SignIn;
 
 const styles = StyleSheet.create({
-  pageContainer: {
+  safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF', // ✅ fixed here, no more pink
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
   },
-  contentContainer: {
+  scrollContainer: {
     flexGrow: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 50,
-    width: '100%', // ✅ full width so no weird background on sides
+    paddingHorizontal: 24,
+    paddingVertical: 40,
   },
   logo: {
-    width: 350,
-    height: 350,
-    marginBottom: -50,
+    width: 450,
+    height: 450,
+    alignSelf: 'center',
+    marginTop: -10,
+    marginBottom: -180,
   },
-  inputWrapper: {
-    width: 320,
-    marginBottom: 10,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    color: '#000000',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#000000',
-    height: 40,
-    borderRadius: 4,
-    paddingHorizontal: 10,
+  formContainer: {
+    width: '100%',
   },
 });

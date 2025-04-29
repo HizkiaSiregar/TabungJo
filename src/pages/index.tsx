@@ -1,8 +1,7 @@
-// src/screens/index.js
-//import Profile from './Profile';
-//import ConfirmDeleteProfile from './ConfirmDeleteProfile';
+// src/pages/index.js
+import HomeEmpty from './HomeEmpty';
+import SignIn from './SignIn';
+import SignUp from './SignUp';
+import SplashScreen from './SplashScreen';
 
-//export {
-  //Profile,
-  //ConfirmDeleteProfile
-//};
+export {HomeEmpty, SignIn, SignUp, SplashScreen};
