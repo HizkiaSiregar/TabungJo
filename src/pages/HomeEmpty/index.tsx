@@ -90,13 +90,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 14,
+    paddingHorizontal: 1,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 64,
+    marginTop: 35,
     paddingHorizontal: 8,
   },
   appTitle: {
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: '100%',
     height: 163,
-    marginTop: 20,
+    marginTop: 5,
   },
   mainTitle: {
     fontFamily: 'Inter-ExtraBold',
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     fontStyle: 'italic',
     color: '#FBC028',
-    marginTop: 24,
+    marginTop: 23,
     marginLeft: 14,
   },
   quote: {
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     textAlign: 'center',
     color: '#000000',
-    marginTop: 22,
+    marginTop: 15,
     marginHorizontal: 40,
   },
   emptyStateMessage: {
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
     color: '#000000',
-    marginTop: 79,
+    marginTop: 50,
   },
   emptyStateBox: {
     backgroundColor: '#D9D9D9',

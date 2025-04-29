@@ -2,7 +2,8 @@
 import React from 'react';
 import {StyleSheet, View, SafeAreaView, ScrollView} from 'react-native';
 import {Button, Gap} from '../../components/atoms';
-import {Header, FormInput} from '../../components/molecules';
+import Header from '../../components/molecules/Header';
+import FormInput from '../../components/molecules/FormInput';
 
 const AddGoals = ({navigation}) => {
   console.log('Rendering AddGoals');
@@ -30,23 +31,23 @@ const AddGoals = ({navigation}) => {
           
           <FormInput
             label="Goal Name"
-            placeholder="Enter your goal name"
+            placeholder=""
           />
           
           <FormInput
             label="Nominal Target (Rp)"
-            placeholder="Enter target amount"
+            placeholder=""
             keyboardType="numeric"
           />
           
           <FormInput
             label="Deadline Date"
-            placeholder="Select deadline date"
+            placeholder=""
           />
           
           <FormInput
             label="Initial Savings (Optional)"
-            placeholder="Enter initial amount"
+            placeholder=""
             keyboardType="numeric"
           />
           

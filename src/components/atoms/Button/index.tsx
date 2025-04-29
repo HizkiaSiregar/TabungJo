@@ -21,13 +21,13 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    height: 53,
-    width: 372,
+    height: 42,
+    width: 311,
   },
   label: {
     textAlign: 'center',
     fontFamily: 'Inter-SemiBold',
-    fontSize: 20,
+    fontSize: 14,
     fontWeight: '600',
   },
 });
