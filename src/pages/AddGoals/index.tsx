@@ -1,16 +1,12 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, SafeAreaView, ScrollView, Platform } from 'react-native';
-import { Button, Gap } from '../../components/atoms';
-import { Header, FormInput } from '../../components/molecules';
-import DateTimePicker from '@react-native-community/datetimepicker';
+// src/pages/AddGoals/index.js
+import React from 'react';
+import {StyleSheet, View, SafeAreaView, ScrollView} from 'react-native';
+import {Button, Gap} from '../../components/atoms';
+import {Header, FormInput} from '../../components/molecules';
 
-const AddGoals = ({ navigation }) => {
-  const [goalName, setGoalName] = useState('');
-  const [targetAmount, setTargetAmount] = useState('');
-  const [deadline, setDeadline] = useState(new Date());
-  const [initialSaving, setInitialSaving] = useState('');
-  const [showDatePicker, setShowDatePicker] = useState(false);
-
+const AddGoals = ({navigation}) => {
+  console.log('Rendering AddGoals');
+  
   const handleAddGoal = () => {
     // Automatically add default values if fields are left blank
     console.log('Goal Added:', {
@@ -62,51 +58,22 @@ const AddGoals = ({ navigation }) => {
           <FormInput
             label="Goal Name"
             placeholder="Enter your goal name"
-            value={goalName}
-            onChangeText={setGoalName}
           />
           
           <FormInput
             label="Nominal Target (Rp)"
             placeholder="Enter target amount"
-            value={targetAmount}
-            onChangeText={(text) => setTargetAmount(text.replace(/[^0-9]/g, ''))}
             keyboardType="numeric"
           />
           
           <FormInput
             label="Deadline Date"
             placeholder="Select deadline date"
-            value={formatDate(deadline)}
-            editable={false}
-            onTouchStart={showDatepicker}
           />
-          
-          {(showDatePicker && Platform.OS === 'ios') && (
-            <DateTimePicker
-              value={deadline}
-              mode="date"
-              display="default"
-              onChange={handleDateChange}
-              minimumDate={new Date()}
-            />
-          )}
-          
-          {(showDatePicker && Platform.OS === 'android') && (
-            <DateTimePicker
-              value={deadline}
-              mode="date"
-              display="calendar"
-              onChange={handleDateChange}
-              minimumDate={new Date()}
-            />
-          )}
           
           <FormInput
             label="Initial Savings (Optional)"
             placeholder="Enter initial amount"
-            value={initialSaving}
-            onChangeText={(text) => setInitialSaving(text.replace(/[^0-9]/g, ''))}
             keyboardType="numeric"
           />
           

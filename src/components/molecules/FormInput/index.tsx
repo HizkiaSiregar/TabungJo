@@ -29,21 +29,38 @@ export default FormInput;
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    width: '100%',
+    alignSelf: 'center',
+    marginBottom: 18,
   },
   label: {
-    fontSize: 20,
+    fontSize: 13,
     fontFamily: 'Inter-SemiBold',
     fontWeight: '600',
     marginBottom: 6,
     color: '#000000',
   },
   input: {
+    width: '100%',
     borderWidth: 1,
     borderColor: '#0F3E48',
-    borderRadius: 0,
-    padding: 10,
-    height: 46,
+    borderRadius: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
     fontFamily: 'Inter-Regular',
+    backgroundColor: '#FFF',
+  },
+  button: {
+    width: '100%',
+    backgroundColor: '#FFC107',
+    paddingVertical: 12,
+    alignItems: 'center',
+    borderRadius: 6,
+    marginTop: 20,
+  },
+  buttonText: {
+    color: '#000',
+    fontWeight: '600',
+    fontSize: 16,
   },
 });

@@ -2,7 +2,7 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, Text, SafeAreaView, Image, ScrollView} from 'react-native';
 import {Button, Gap} from '../../components/atoms';
-import {FormInput} from '../../components/molecules';
+import FormInput from '../../components/molecules/FormInput';
 
 const SignIn = ({navigation}) => {
   console.log('Rendering SignIn');
@@ -37,14 +37,14 @@ const SignIn = ({navigation}) => {
         <View style={styles.formContainer}>
           <FormInput
             label="Username"
-            placeholder="Enter your username"
+            placeholder=""
             value={username}
             onChangeText={setUsername}
           />
           
           <FormInput
             label="Password"
-            placeholder="Enter your password"
+            placeholder=""
             value={password}
             onChangeText={setPassword}
             secureTextEntry={true}
@@ -89,8 +89,8 @@ const styles = StyleSheet.create({
     width: 450,
     height: 450,
     alignSelf: 'center',
-    marginTop: -10,
-    marginBottom: -180,
+    marginTop: -85,
+    marginBottom: -125,
   },
   formContainer: {
     width: '100%',

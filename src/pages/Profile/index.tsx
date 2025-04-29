@@ -2,7 +2,9 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, SafeAreaView, ScrollView} from 'react-native';
 import {Button, Gap} from '../../components/atoms';
-import {Header, FormInput, ProfilePhoto} from '../../components/molecules';
+import Header from '../../components/molecules/Header';
+import FormInput from '../../components/molecules/FormInput';
+import ProfilePhoto from '../../components/molecules/ProfilePhoto';
 
 const Profile = ({navigation}) => {
   console.log('Rendering Profile');
@@ -48,14 +50,14 @@ const Profile = ({navigation}) => {
           {/* Form Inputs */}
           <FormInput
             label="Username"
-            placeholder="Enter username"
+            placeholder=""
             value={username}
             onChangeText={setUsername}
           />
           
           <FormInput
             label="Email"
-            placeholder="Enter email"
+            placeholder=""
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"

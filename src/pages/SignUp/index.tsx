@@ -1,50 +1,49 @@
-// src/pages/SignUp/index.js
 import React, {useState} from 'react';
-import {StyleSheet, View, Text, SafeAreaView, ScrollView} from 'react-native';
+import {StyleSheet, View, SafeAreaView, ScrollView, Image} from 'react-native';
 import {Button, Gap} from '../../components/atoms';
-import {FormInput, Header} from '../../components/molecules';
+import FormInput from '../../components/molecules/FormInput';
 
 const SignUp = ({navigation}) => {
-  console.log('Rendering SignUp');
-
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSignUp = () => {
-    console.log('Sign Up');
-    // In a real app, you would create account here
-
-    // Navigate to SignIn after account creation
     navigation.navigate('SignIn');
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
-        <Header title="Sign Up" />
-
         <View style={styles.content}>
           <Gap height={20} />
 
+          {/* Logo */}
+          <Image
+            source={require('../../assets/LogoTabungJo.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+
+          <Gap height={20} />
+
+          {/* Form Input */}
           <FormInput
             label="Username"
-            placeholder="Enter your username"
+            placeholder=""
             value={username}
             onChangeText={setUsername}
           />
-
           <FormInput
             label="Email Address"
-            placeholder="Enter your email address"
+            placeholder=""
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
           />
-
           <FormInput
             label="Password"
-            placeholder="Enter your password"
+            placeholder=""
             value={password}
             onChangeText={setPassword}
             secureTextEntry={true}
@@ -52,8 +51,9 @@ const SignUp = ({navigation}) => {
 
           <Gap height={30} />
 
+          {/* Button */}
           <Button
-            label="Create Account"
+            label="Create"
             onPress={handleSignUp}
             color="#FBC028"
             textColor="#000000"
@@ -80,5 +80,10 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 24,
     paddingBottom: 40,
+    alignItems: 'center',
+  },
+  logo: {
+    width: 200,
+    height: 300,
   },
 });
