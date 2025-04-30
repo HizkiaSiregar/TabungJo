@@ -1,14 +1,16 @@
+// src/components/atoms/Gap/index.js
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 
-const Gap = ({height}) => {
-  return <View style={styles.gap(height)} />;
+const Gap = ({height, width}) => {
+  return <View style={styles.gap(height, width)} />;
 };
 
 export default Gap;
 
 const styles = StyleSheet.create({
-  gap: height => ({
+  gap: (height, width) => ({
     height: height,
+    width: width,
   }),
 });

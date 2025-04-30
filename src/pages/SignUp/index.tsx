@@ -1,94 +1,89 @@
-import React from 'react';
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Text,
-} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, View, SafeAreaView, ScrollView, Image} from 'react-native';
 import {Button, Gap} from '../../components/atoms';
-import {Header, TextInput} from '../../components/molecules';
-// import {NullPhoto} from '../../assets';
+import FormInput from '../../components/molecules/FormInput';
 
 const SignUp = ({navigation}) => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignUp = () => {
+    navigation.navigate('SignIn');
+  };
+
   return (
-    <ScrollView style={styles.container}>
-      <Header title="Sign Up" />
-      <Gap height={24} />
-      <View style={styles.contentWrapper}>
-        <View style={styles.profileContainer}>
-          <View style={styles.profile}>
-            <View style={styles.addPhoto}>
-              <TouchableOpacity activeOpacity={0.5}>
-                <Text style={styles.addPhotoLabel}>Add Photo</Text>
-                {/* <Image source={NullPhoto} style={styles.avatar} /> */}
-              </TouchableOpacity>
-            </View>
-          </View>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container}>
+        <View style={styles.content}>
+          <Gap height={20} />
+
+          {/* Logo */}
+          <Image
+            source={require('../../assets/LogoTabungJo.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+
+          <Gap height={20} />
+
+          {/* Form Input */}
+          <FormInput
+            label="Username"
+            placeholder=""
+            value={username}
+            onChangeText={setUsername}
+          />
+          <FormInput
+            label="Email Address"
+            placeholder=""
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+          />
+          <FormInput
+            label="Password"
+            placeholder=""
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={true}
+          />
+
+          <Gap height={30} />
+
+          {/* Button */}
+          <Button
+            label="Create"
+            onPress={handleSignUp}
+            color="#FBC028"
+            textColor="#000000"
+          />
+
+          <Gap height={30} />
         </View>
-        <Gap height={26} />
-        <TextInput label="Full Name" placeholder="Type your full name" />
-        <Gap height={16} />
-        <TextInput
-          label="Email Address"
-          placeholder="Type your email address"
-        />
-        <Gap height={16} />
-        <TextInput label="Password" placeholder="Type your password" />
-        <Gap height={24} />
-        <Button
-          label="Continue"
-          onPress={() => navigation.navigate('SignIn')}
-        />
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 export default SignUp;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
   container: {
     flex: 1,
-  },
-  contentWrapper: {
     backgroundColor: '#FFFFFF',
-    flex: 1,
+  },
+  content: {
     paddingHorizontal: 24,
-  },
-  profileContainer: {
-    marginTop: 26,
+    paddingBottom: 40,
     alignItems: 'center',
   },
-  profile: {
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 110,
-    width: 110,
-    borderRadius: 110 / 2,
-    borderWidth: 1,
-    borderColor: '#8D92A3',
-    borderStyle: 'dashed',
-  },
-  addPhoto: {
-    backgroundColor: '#F0F0F0',
-    width: 90,
-    height: 90,
-    borderRadius: 90 / 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  addPhotoLabel: {
-    fontFamily: 'Poppins-Light',
-    fontSize: 14,
-    width: 40,
-    textAlign: 'center',
-  },
-  avatar: {
-    height: 90,
-    width: 90,
-    borderRadius: 90 / 2,
+  logo: {
+    width: 200,
+    height: 300,
   },
 });

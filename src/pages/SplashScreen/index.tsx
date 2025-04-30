@@ -1,18 +1,22 @@
-// pages/SplashScreen.tsx
-import {StyleSheet, Text, View, Image} from 'react-native';
+// src/pages/SplashScreen/index.js
 import React, {useEffect} from 'react';
-import {Logo} from '../../assets'; // Import dari index.ts
+import {StyleSheet, View, Image} from 'react-native';
 
 const SplashScreen = ({navigation}) => {
   useEffect(() => {
+    // Navigate to SignIn after 3 seconds
     setTimeout(() => {
       navigation.replace('SignIn');
     }, 3000);
-  }, []);
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
-      <Image source={Logo} style={styles.logo} />
+      <Image
+        source={require('../../assets/LogoTabungJo.png')}
+        style={styles.logo}
+        resizeMode="contain"
+      />
     </View>
   );
 };
@@ -21,14 +25,13 @@ export default SplashScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#FFFFFF',
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   logo: {
-    width: 350,
-    height: 261,
-    resizeMode: 'contain',
+    width: 500,
+    height: 500,
   },
 });

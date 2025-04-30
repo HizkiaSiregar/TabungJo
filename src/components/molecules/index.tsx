@@ -1,4 +1,10 @@
+// src/components/molecules/index.js
 import Header from './Header';
-import TextInput from './TextInput';
+import ProfilePhoto from './ProfilePhoto';
+import FormInput from './FormInput';
 
-export {Header, TextInput};
+export {
+  Header,
+  ProfilePhoto,
+  FormInput
+};

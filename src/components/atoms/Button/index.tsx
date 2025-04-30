@@ -1,13 +1,14 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+// src/components/atoms/Button/index.js
 import React from 'react';
+import {TouchableOpacity, Text, StyleSheet} from 'react-native';
 
-const Button = ({label, color = '#02CF8E', textColor = '#020202', onPress}) => {
+const Button = ({label, color = '#FBC028', textColor = '#000000', onPress}) => {
   return (
     <TouchableOpacity
-      style={styles.button(color)}
-      activeOpacity={0.5}
+      style={[styles.button, {backgroundColor: color}]}
+      activeOpacity={0.7}
       onPress={onPress}>
-      <Text style={styles.label(textColor)}>{label}</Text>
+      <Text style={[styles.label, {color: textColor}]}>{label}</Text>
     </TouchableOpacity>
   );
 };
@@ -15,15 +16,18 @@ const Button = ({label, color = '#02CF8E', textColor = '#020202', onPress}) => {
 export default Button;
 
 const styles = StyleSheet.create({
-  button: color => ({
-    backgroundColor: color,
+  button: {
     borderRadius: 8,
     paddingVertical: 12,
-  }),
-  label: textColor => ({
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 42,
+    width: 310,
+  },
+  label: {
     textAlign: 'center',
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Inter-SemiBold',
     fontSize: 14,
-    color: textColor,
-  }),
+    fontWeight: '600',
+  },
 });
