@@ -23,7 +23,7 @@ const Profile = ({navigation}) => {
   
   const handleReturnHome = () => {
     console.log('Returning to home');
-    navigation.navigate('HomeWithGoals');
+    navigation.navigate('HomeEmpty');
   };
   
   const handleChangePhoto = () => {

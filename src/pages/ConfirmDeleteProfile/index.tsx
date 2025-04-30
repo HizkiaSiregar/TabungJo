@@ -12,7 +12,7 @@ const ConfirmDeleteProfile = ({navigation}) => {
     // Reset data logic would go here
     
     // Navigate back to profile
-    navigation.navigate('SignIn');
+    navigation.navigate('HomeEmpty');
   };
 
   const handleCancel = () => {
