@@ -18,8 +18,8 @@ const HomeWithGoals = ({navigation}) => {
     {
       id: '1',
       name: 'Iphone 21 Pro max',
-      target: '20000',
-      saved: '5000',
+      target: '20.000',
+      saved: '-',
       progress: 25, // percentage
     },
   ];
@@ -140,14 +140,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 14,
+    paddingHorizontal: 1,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 64,
-    paddingHorizontal: 8,
+    marginTop: 35,
+    paddingHorizontal: 7,
   },
   appTitle: {
     fontFamily: 'Inter-ExtraBold',
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: '100%',
     height: 163,
-    marginTop: 20,
+    marginTop: 5,
   },
   mainTitle: {
     fontFamily: 'Inter-ExtraBold',
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#000000',
     marginTop: 22,
-    marginHorizontal: 40,
+    marginHorizontal: 32,
   },
   dreamListTitle: {
     fontFamily: 'Inter-ExtraBold',
@@ -194,6 +194,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginVertical: 8,
     borderWidth: 1,
+    paddingHorizontal: 10,
     borderColor: '#E0E0E0',
   },
   goalName: {

@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#000000',
     marginTop: 15,
-    marginHorizontal: 40,
+    marginHorizontal: 32,
   },
   emptyStateMessage: {
     fontFamily: 'Inter-Medium',

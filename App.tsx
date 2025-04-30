@@ -12,7 +12,7 @@ import HomeWithGoals from './src/pages/HomeWithGoals';
 import Profile from './src/pages/Profile';
 import AddGoals from './src/pages/AddGoals';
 import EditGoals from './src/pages/EditGoals';
-import AddSavings from './src/pages/AddSavings';
+import AddSavings from './src/pages/AddSaving';
 import ConfirmDeleteProfile from './src/pages/ConfirmDeleteProfile';
 import ConfirmDeleteGoal from './src/pages/ConfirmDeleteGoal';
 

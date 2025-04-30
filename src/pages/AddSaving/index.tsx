@@ -9,7 +9,7 @@ const AddSavings = ({ navigation, route }) => {
   // For demo purposes, we'll use sample data
   const goalName = 'Iphone 21 Pro max';
   const targetAmount = '20000';
-  const currentSaved = '5000'; // This would come from actual data
+  const currentSaved = '-'; // This would come from actual data
   
   const [amount, setAmount] = useState('');
 
@@ -54,7 +54,7 @@ const AddSavings = ({ navigation, route }) => {
           
           <FormInput
             label="Add Saving (Rp)"
-            placeholder="Enter amount to add"
+            placeholder=""
             value={amount}
             onChangeText={(text) => setAmount(text.replace(/[^0-9]/g, ''))}
             keyboardType="numeric"

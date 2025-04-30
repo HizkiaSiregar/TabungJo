@@ -1,4 +1,3 @@
-// src/pages/EditGoals/index.js
 import React, {useState} from 'react';
 import {StyleSheet, View, SafeAreaView, ScrollView} from 'react-native';
 import {Button, Gap} from '../../components/atoms';
@@ -6,32 +5,26 @@ import {Header, FormInput} from '../../components/molecules';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const EditGoals = ({navigation, route}) => {
-  // In a real app, you would get the goal data from route.params
-  // For demo purposes, we'll use sample data
-  const [goalName, setGoalName] = useState('Iphone 21 Pro max');
-  const [targetAmount, setTargetAmount] = useState('20000');
-  const [deadline, setDeadline] = useState(new Date());
+  const [goalName, setGoalName] = useState('');
+  const [targetAmount, setTargetAmount] = useState('');
+  const [deadline, setDeadline] = useState(null); // Awalnya null
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleSaveEdit = () => {
     console.log('Goal Updated:', {
       name: goalName,
       targetAmount,
-      deadline: deadline.toISOString().split('T')[0],
+      deadline: deadline ? deadline.toISOString().split('T')[0] : null,
     });
-
-    // In a real app, you would update this in state/context/backend
-    // Then navigate back to Home screen
     navigation.navigate('HomeWithGoals');
   };
 
   const handleDelete = () => {
-    // Navigate to confirm delete screen
     navigation.navigate('ConfirmDeleteGoal');
   };
 
   const handleCancel = () => {
-    navigation.navigate('HomeEmpty');
+    navigation.navigate('HomeWithGoals');
   };
 
   const handleDateChange = (event, selectedDate) => {
@@ -46,7 +39,7 @@ const EditGoals = ({navigation, route}) => {
   };
 
   const formatDate = date => {
-    return date.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    return date ? date.toISOString().split('T')[0] : '';
   };
 
   return (
@@ -59,14 +52,14 @@ const EditGoals = ({navigation, route}) => {
 
           <FormInput
             label="Goal Name"
-            placeholder="Enter your goal name"
+            placeholder=""
             value={goalName}
             onChangeText={setGoalName}
           />
 
           <FormInput
-            label="Nominal Target (Rp)"
-            placeholder="Enter target amount"
+            label="Nominal Target"
+            placeholder=""
             value={targetAmount}
             onChangeText={text => setTargetAmount(text.replace(/[^0-9]/g, ''))}
             keyboardType="numeric"
@@ -74,7 +67,7 @@ const EditGoals = ({navigation, route}) => {
 
           <FormInput
             label="Deadline Date"
-            placeholder="Select deadline date"
+            placeholder=""
             value={formatDate(deadline)}
             editable={false}
             onTouchStart={showDatepicker}
@@ -82,7 +75,7 @@ const EditGoals = ({navigation, route}) => {
 
           {showDatePicker && (
             <DateTimePicker
-              value={deadline}
+              value={deadline || new Date()}
               mode="date"
               display="default"
               onChange={handleDateChange}
