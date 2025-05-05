@@ -2,6 +2,11 @@ import React, {useState} from 'react';
 import {StyleSheet, View, SafeAreaView, ScrollView, Image} from 'react-native';
 import {Button, Gap} from '../../components/atoms';
 import FormInput from '../../components/molecules/FormInput';
+import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
+import {showMessage} from 'react-native-flash-message';
+import '../../config/firebase'; 
+import { getDatabase, ref, set } from 'firebase/database';
+
 
 const SignUp = ({navigation}) => {
   const [username, setUsername] = useState('');
@@ -9,7 +14,31 @@ const SignUp = ({navigation}) => {
   const [password, setPassword] = useState('');
 
   const handleSignUp = () => {
-    navigation.navigate('SignIn');
+    const auth = getAuth();
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(userCredential => {
+        const user = userCredential.user;
+  
+        // Simpan data tambahan ke Realtime Database
+        const db = getDatabase();
+        set(ref(db, 'users/' + user.uid), {
+          username: username,
+          email: email,
+        });
+  
+        showMessage({
+          message: 'Registrasi berhasil, silahkan login',
+          type: 'success',
+        });
+        navigation.navigate('SignIn');
+      })
+      .catch(error => {
+        const errorMessage = error.message;
+        showMessage({
+          message: errorMessage,
+          type: 'danger',
+        });
+      });
   };
 
   return (
@@ -17,17 +46,12 @@ const SignUp = ({navigation}) => {
       <ScrollView style={styles.container}>
         <View style={styles.content}>
           <Gap height={20} />
-
-          {/* Logo */}
           <Image
             source={require('../../assets/LogoTabungJo.png')}
             style={styles.logo}
             resizeMode="contain"
           />
-
           <Gap height={20} />
-
-          {/* Form Input */}
           <FormInput
             label="Username"
             placeholder=""
@@ -46,19 +70,15 @@ const SignUp = ({navigation}) => {
             placeholder=""
             value={password}
             onChangeText={setPassword}
-            secureTextEntry={true}
+            secureTextEntry
           />
-
           <Gap height={30} />
-
-          {/* Button */}
           <Button
             label="Create"
             onPress={handleSignUp}
             color="#FBC028"
             textColor="#000000"
           />
-
           <Gap height={30} />
         </View>
       </ScrollView>
