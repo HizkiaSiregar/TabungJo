@@ -2,11 +2,10 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-<<<<<<< HEAD
+
 import FlashMessage from 'react-native-flash-message';
-=======
+
 import './src/config/firebase';
->>>>>>> 5b92f362d6650f5c4fd76f30b39f8bbe749a4d8a
 
 // Import all pages
 import SplashScreen from './src/pages/SplashScreen';
