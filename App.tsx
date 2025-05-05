@@ -2,8 +2,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import FlashMessage from 'react-native-flash-message';
 
-// Import all screens
+// Import all pages
 import SplashScreen from './src/pages/SplashScreen';
 import SignIn from './src/pages/SignIn';
 import SignUp from './src/pages/SignUp';
@@ -78,6 +79,7 @@ const App = () => {
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
+      <FlashMessage position="top" />
     </NavigationContainer>
   );
 };

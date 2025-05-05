@@ -1,33 +1,61 @@
 // src/pages/Profile/index.js
-import React from 'react';
-import {StyleSheet, View, SafeAreaView, ScrollView, Text, TouchableOpacity} from 'react-native';
+import React, { useState } from 'react';
+import {StyleSheet, View, SafeAreaView, ScrollView, Text} from 'react-native';
 import {Button, Gap} from '../../components/atoms';
 import Header from '../../components/molecules/Header';
-import FormInput from '../../components/molecules/FormInput';
 import ProfilePhoto from '../../components/molecules/ProfilePhoto';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { showMessage } from 'react-native-flash-message';
 
 const Profile = ({navigation}) => {
   // Static values that cannot be changed
   const username = 'UserTabungJo';
   const email = 'usertabungjo@example.com';
-  
+  const [photo, setPhoto] = useState(null);
+
   const handleResetData = () => {
     console.log('Navigate to ConfirmDeleteProfile');
     navigation.navigate('ConfirmDeleteProfile');
   };
-  
+
   const handleLogout = () => {
     console.log('Logging out');
     navigation.navigate('SignIn');
   };
-  
+
   const handleReturnHome = () => {
     console.log('Returning to home');
     navigation.navigate('HomeEmpty');
   };
-  
+
   const handleChangePhoto = () => {
-    console.log('Change photo');
+    launchImageLibrary({
+      maxHeight: 200,
+      maxWidth: 200,
+      quality: 0.5,
+      includeBase64: true,
+      mediaType: 'photo',
+    }, (response) => {
+      if (response.didCancel) {
+        showMessage({
+          message: 'Image selection cancelled',
+          type: 'danger',
+        });
+      } else if (response.errorCode) {
+        showMessage({
+          message: `Error: ${response.errorMessage || 'Unknown error'}`,
+          type: 'danger',
+        });
+      } else if (response.assets && response.assets.length > 0) {
+        const asset = response.assets[0];
+        const source = { uri: asset.uri };
+        setPhoto(source);
+        showMessage({
+          message: 'Profile photo updated successfully',
+          type: 'success',
+        });
+      }
+    });
   };
 
   // Custom component to render static input
@@ -46,14 +74,18 @@ const Profile = ({navigation}) => {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
         <Header title="Profile" />
-        
+
         <View style={styles.content}>
           {/* Profile Photo */}
           <View style={styles.photoContainer}>
-            <ProfilePhoto 
-              onPress={handleChangePhoto}
-              size={156}
-            />
+            <View style={styles.profileCircle}>
+              <ProfilePhoto 
+                onPress={handleChangePhoto}
+                size={156}
+                color="#77A6B6"
+                source={photo}
+              />
+            </View>
           </View>
           
           <Gap height={20} />
@@ -115,6 +147,16 @@ const styles = StyleSheet.create({
   photoContainer: {
     alignItems: 'center',
     marginTop: 20,
+  },
+  profileCircle: {
+    width: 168, // Slightly larger than the image size (156)
+    height: 168,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 84, // Half of the width for perfect circle
+    borderWidth: 1,
+    borderColor: '#8D92A3',
+    borderStyle: 'dashed',
   },
   staticInputContainer: {
     width: '100%',
