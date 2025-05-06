@@ -1,16 +1,12 @@
-// App.js
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 import FlashMessage from 'react-native-flash-message';
 
-import './src/config/firebase';
-
-// Import all pages
+// Import screens
 import SplashScreen from './src/pages/SplashScreen';
-import SignIn from './src/pages/SignIn';
 import SignUp from './src/pages/SignUp';
+import SignIn from './src/pages/SignIn';
 import HomeEmpty from './src/pages/HomeEmpty';
 import HomeWithGoals from './src/pages/HomeWithGoals';
 import Profile from './src/pages/Profile';
@@ -19,6 +15,9 @@ import EditGoals from './src/pages/EditGoals';
 import AddSavings from './src/pages/AddSaving';
 import ConfirmDeleteProfile from './src/pages/ConfirmDeleteProfile';
 import ConfirmDeleteGoal from './src/pages/ConfirmDeleteGoal';
+
+// Initialize Firebase
+import './src/config/firebase';
 
 const Stack = createNativeStackNavigator();
 

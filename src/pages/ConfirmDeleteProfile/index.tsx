@@ -1,22 +1,46 @@
-// src/pages/ConfirmDeleteProfile/index.js
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, SafeAreaView} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+} from 'react-native';
 import {Gap} from '../../components/atoms';
 import {Header} from '../../components/molecules';
+import {getAuth} from 'firebase/auth';
+import {deleteUserData} from '../../services/firebase';
+import {showMessage} from 'react-native-flash-message';
 
 const ConfirmDeleteProfile = ({navigation}) => {
-  console.log('Rendering ConfirmDeleteProfile');
-  
-  const handleConfirm = () => {
-    console.log('Confirm data reset');
-    // Reset data logic would go here
-    
-    // Navigate back to profile
-    navigation.navigate('HomeEmpty');
+  const handleConfirm = async () => {
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (!user) {
+        navigation.replace('SignIn');
+        return;
+      }
+
+      await deleteUserData(user.uid);
+
+      showMessage({
+        message: 'All data has been reset successfully',
+        type: 'success',
+      });
+
+      navigation.navigate('HomeEmpty');
+    } catch (error) {
+      showMessage({
+        message: 'Failed to reset data',
+        description: error.message,
+        type: 'danger',
+      });
+    }
   };
 
   const handleCancel = () => {
-    console.log('Cancel data reset');
     navigation.goBack();
   };
 
@@ -24,10 +48,8 @@ const ConfirmDeleteProfile = ({navigation}) => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Header title="Profile" />
-        
         {/* Overlay for dimming background */}
         <View style={styles.overlay} />
-        
         {/* Confirmation Dialog */}
         <View style={styles.dialogContainer}>
           <View style={styles.dialogContent}>
@@ -39,36 +61,28 @@ const ConfirmDeleteProfile = ({navigation}) => {
                 and reset the app as if it's your first time using it.
               </Text>
             </Text>
-            
             <Gap height={10} />
-            
             <Text style={styles.message}>
               <Text style={styles.normalText}>This action </Text>
               <Text style={styles.boldText}>cannot be undone.</Text>
             </Text>
-            
             <Gap height={10} />
-            
             <Text style={styles.message}>
-              <Text style={styles.normalText}>Are you sure you want to proceed?</Text>
+              <Text style={styles.normalText}>
+                Are you sure you want to proceed?
+              </Text>
             </Text>
-            
             <Gap height={20} />
-            
             <View style={styles.buttonRow}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={[styles.button, styles.cancelButton]}
-                onPress={handleCancel}
-              >
+                onPress={handleCancel}>
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
-              
               <Gap width={10} />
-              
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={[styles.button, styles.confirmButton]}
-                onPress={handleConfirm}
-              >
+                onPress={handleConfirm}>
                 <Text style={styles.confirmButtonText}>CONFIRM</Text>
               </TouchableOpacity>
             </View>

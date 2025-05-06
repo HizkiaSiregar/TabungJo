@@ -1,44 +1,60 @@
-import React, {useState} from 'react';
-import {StyleSheet, View, SafeAreaView, ScrollView, Image} from 'react-native';
-import {Button, Gap} from '../../components/atoms';
-import FormInput from '../../components/molecules/FormInput';
-import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
-import {showMessage} from 'react-native-flash-message';
-import '../../config/firebase'; 
-import { getDatabase, ref, set } from 'firebase/database';
+import React, { useState } from "react";
+import { StyleSheet, View, SafeAreaView, ScrollView, Image } from "react-native";
+import { Button, Gap } from "../../components/atoms/";
+import { Header, FormInput } from "../../components/molecules/";
+import { signUp } from "../../services/firebase";
+import { showMessage } from "react-native-flash-message";
 
+const SignUp = ({ navigation }) => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-const SignUp = ({navigation}) => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSignUp = () => {
-    const auth = getAuth();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(userCredential => {
-        const user = userCredential.user;
-  
-        // Simpan data tambahan ke Realtime Database
-        const db = getDatabase();
-        set(ref(db, 'users/' + user.uid), {
-          username: username,
-          email: email,
-        });
-  
-        showMessage({
-          message: 'Registrasi berhasil, silahkan login',
-          type: 'success',
-        });
-        navigation.navigate('SignIn');
-      })
-      .catch(error => {
-        const errorMessage = error.message;
-        showMessage({
-          message: errorMessage,
-          type: 'danger',
-        });
+  const handleSignUp = async () => {
+    if (!username || !email || !password) {
+      showMessage({
+        message: "All fields are required",
+        type: "danger",
       });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await signUp(email, password, {
+        username,
+        fullName: username,
+        photo: ""
+      });
+      
+      showMessage({
+        message: "Registration successful",
+        description: "Your account has been created. Please sign in.",
+        type: "success",
+      });
+      
+      navigation.navigate("SignIn");
+    } catch (error) {
+      let message = "Registration failed";
+      
+      // Handle specific error codes
+      if (error.code === "auth/email-already-in-use") {
+        message = "Email is already in use";
+      } else if (error.code === "auth/invalid-email") {
+        message = "Invalid email format";
+      } else if (error.code === "auth/weak-password") {
+        message = "Password is too weak";
+      }
+      
+      showMessage({
+        message,
+        description: error.message,
+        type: "danger",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -47,7 +63,7 @@ const SignUp = ({navigation}) => {
         <View style={styles.content}>
           <Gap height={20} />
           <Image
-            source={require('../../assets/LogoTabungJo.png')}
+            source={require("../../assets/LogoTabungJo.png")}
             style={styles.logo}
             resizeMode="contain"
           />
@@ -74,10 +90,11 @@ const SignUp = ({navigation}) => {
           />
           <Gap height={30} />
           <Button
-            label="Create"
+            label={loading ? "Creating account..." : "Create"}
             onPress={handleSignUp}
             color="#FBC028"
             textColor="#000000"
+            disabled={loading}
           />
           <Gap height={30} />
         </View>
@@ -91,16 +108,16 @@ export default SignUp;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   content: {
     paddingHorizontal: 24,
     paddingBottom: 40,
-    alignItems: 'center',
+    alignItems: "center",
   },
   logo: {
     width: 200,
