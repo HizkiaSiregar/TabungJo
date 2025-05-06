@@ -9,8 +9,8 @@ import {
   PermissionsAndroid,
 } from "react-native";
 import { Button, Gap } from "../../components/atoms";
-import { Header } from "../../components/molecules/Header";
-import { ProfilePhoto } from "../../components/molecules/ProfilePhoto";
+import Header from "../../components/molecules/Header";
+import ProfilePhoto from "../../components/molecules/ProfilePhoto";
 import { launchImageLibrary } from "react-native-image-picker";
 import { showMessage } from "react-native-flash-message";
 import { getAuth } from "firebase/auth";

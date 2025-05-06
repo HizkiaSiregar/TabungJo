@@ -67,6 +67,7 @@ import {
   // Profile Picture Services
   export const uploadProfilePicture = async (uri, uid) => {
     try {
+      console.log("Image URI:", uri);
       const response = await fetch(uri);
       const blob = await response.blob();
       

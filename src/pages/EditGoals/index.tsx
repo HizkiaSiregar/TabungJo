@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, SafeAreaView, ScrollView, Platform } from 'react-native';
+import { StyleSheet, View, SafeAreaView, ScrollView, Platform, Text} from 'react-native';
 import { Button, Gap } from '../../components/atoms';
 import { Header, FormInput } from '../../components/molecules';
 import DateTimePicker from '@react-native-community/datetimepicker';
