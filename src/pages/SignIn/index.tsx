@@ -1,25 +1,70 @@
-// src/pages/SignIn/index.js
-import React, {useState} from 'react';
-import {StyleSheet, View, Text, SafeAreaView, Image, ScrollView} from 'react-native';
-import {Button, Gap} from '../../components/atoms';
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Image,
+  ScrollView,
+} from 'react-native';
+import { Button, Gap } from '../../components/atoms';
 import FormInput from '../../components/molecules/FormInput';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { showMessage } from 'react-native-flash-message';
+import '../../config/firebase';
 
-const SignIn = ({navigation}) => {
-  console.log('Rendering SignIn');
-  
-  const [username, setUsername] = useState('');
+const SignIn = ({ navigation }) => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSignIn = () => {
-    console.log('Sign In');
-    // In a real app, you would validate credentials here
-    
-    // Navigate to HomeEmpty after login
-    navigation.replace('HomeEmpty');
+    if (!email || !password) {
+      showMessage({
+        message: 'Email dan password wajib diisi',
+        type: 'danger',
+      });
+      return;
+    }
+
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, email, password)
+      .then(userCredential => {
+        showMessage({
+          message: 'Login berhasil!',
+          type: 'success',
+        });
+        navigation.replace('HomeEmpty');
+      })
+      .catch(error => {
+        // Mapping error Firebase ke pesan yang lebih jelas
+        let friendlyMessage = '';
+
+        switch (error.code) {
+          case 'auth/user-not-found':
+            friendlyMessage = 'Akun tidak ditemukan';
+            break;
+          case 'auth/wrong-password':
+            friendlyMessage = 'Password salah';
+            break;
+          case 'auth/invalid-email':
+            friendlyMessage = 'Format email tidak valid';
+            break;
+          case 'auth/too-many-requests':
+            friendlyMessage =
+              'Terlalu banyak percobaan login. Coba lagi nanti.';
+            break;
+          default:
+            friendlyMessage = error.message;
+        }
+
+        showMessage({
+          message: 'Login gagal',
+          description: friendlyMessage,
+          type: 'danger',
+        });
+      });
   };
 
   const handleSignUp = () => {
-    console.log('Navigate to SignUp');
     navigation.navigate('SignUp');
   };
 
@@ -31,17 +76,17 @@ const SignIn = ({navigation}) => {
           style={styles.logo}
           resizeMode="contain"
         />
-        
         <Gap height={30} />
-        
+
         <View style={styles.formContainer}>
           <FormInput
-            label="Username"
+            label="Email Address"
             placeholder=""
-            value={username}
-            onChangeText={setUsername}
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
           />
-          
+
           <FormInput
             label="Password"
             placeholder=""
@@ -49,18 +94,18 @@ const SignIn = ({navigation}) => {
             onChangeText={setPassword}
             secureTextEntry={true}
           />
-          
+
           <Gap height={30} />
-          
+
           <Button
             label="Login"
             onPress={handleSignIn}
             color="#FBC028"
             textColor="#000000"
           />
-          
+
           <Gap height={15} />
-          
+
           <Button
             label="Sign Up"
             onPress={handleSignUp}
