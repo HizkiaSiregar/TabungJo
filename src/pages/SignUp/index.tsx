@@ -59,7 +59,7 @@ const SignUp = ({navigation}) => {
             onChangeText={setUsername}
           />
           <FormInput
-            label="Email Address"
+            label="Email"
             placeholder=""
             value={email}
             onChangeText={setEmail}

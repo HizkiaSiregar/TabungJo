@@ -80,7 +80,7 @@ const SignIn = ({ navigation }) => {
 
         <View style={styles.formContainer}>
           <FormInput
-            label="Email Address"
+            label="Email"
             placeholder=""
             value={email}
             onChangeText={setEmail}
