@@ -1,18 +1,41 @@
-// src/pages/ConfirmDeleteGoal/index.js
 import React from 'react';
 import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Gap } from '../../components/atoms';
+import { getAuth } from 'firebase/auth';
+import { deleteGoal } from '../../services/firebase';
+import { showMessage } from 'react-native-flash-message';
 
-const ConfirmDeleteGoal = ({ navigation }) => {
-  const handleConfirm = () => {
-    console.log('Goal delete confirmed');
-    // In a real app, you would delete the goal from state/context/backend
-    // Then navigate back to Home screen
-    navigation.navigate('HomeEmpty');
+const ConfirmDeleteGoal = ({ navigation, route }) => {
+  const handleConfirm = async () => {
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      
+      if (!user) {
+        navigation.replace('SignIn');
+        return;
+      }
+      
+      const { goalId } = route.params;
+      
+      await deleteGoal(user.uid, goalId);
+      
+      showMessage({
+        message: 'Goal deleted successfully',
+        type: 'success',
+      });
+      
+      navigation.navigate('HomeWithGoals');
+    } catch (error) {
+      showMessage({
+        message: 'Failed to delete goal',
+        description: error.message,
+        type: 'danger',
+      });
+    }
   };
 
   const handleCancel = () => {
-    console.log('Goal delete canceled');
     navigation.goBack();
   };
 
@@ -22,10 +45,8 @@ const ConfirmDeleteGoal = ({ navigation }) => {
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Edit Goal</Text>
         </View>
-        
         {/* Overlay for dimming background */}
         <View style={styles.overlay} />
-        
         {/* Confirmation Dialog */}
         <View style={styles.dialogContainer}>
           <View style={styles.dialogContent}>
@@ -37,33 +58,25 @@ const ConfirmDeleteGoal = ({ navigation }) => {
                 and all related data.
               </Text>
             </Text>
-            
             <Gap height={10} />
-            
             <Text style={styles.message}>
               <Text style={styles.normalText}>This action </Text>
               <Text style={styles.boldText}>cannot be undone.</Text>
             </Text>
-            
             <Gap height={10} />
-            
             <Text style={styles.message}>
               <Text style={styles.normalText}>Are you sure you want to proceed?</Text>
             </Text>
-            
             <Gap height={20} />
-            
             <View style={styles.buttonRow}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={[styles.button, styles.cancelButton]}
                 onPress={handleCancel}
               >
                 <Text style={styles.cancelButtonText}>Cancel</Text>
               </TouchableOpacity>
-              
               <Gap width={10} />
-              
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={[styles.button, styles.confirmButton]}
                 onPress={handleConfirm}
               >

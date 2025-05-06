@@ -1,5 +1,4 @@
-// src/pages/HomeWithGoals/index.js
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,36 +10,63 @@ import {
 } from 'react-native';
 import {Button, Gap} from '../../components/atoms';
 import {ProfilePhoto} from '../../components/molecules';
+import {getAuth} from 'firebase/auth';
+import {getUserProfile, fetchGoals} from '../../services/firebase';
 
 const HomeWithGoals = ({navigation}) => {
-  // Sample goal data
-  const goals = [
-    {
-      id: '1',
-      name: 'Iphone 21 Pro max',
-      target: '20.000',
-      saved: '-',
-      progress: 25, // percentage
-    },
-  ];
+  const [goals, setGoals] = useState([]);
+  const [user, setUser] = useState({
+    username: '',
+    photo: null,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+      navigation.replace('SignIn');
+      return;
+    }
+
+    const uid = currentUser.uid;
+
+    // Get user profile
+    const unsubscribeUser = getUserProfile(uid, userData => {
+      if (userData) {
+        setUser({
+          username: userData.username || 'User',
+          photo: userData.photo ? {uri: userData.photo} : null,
+        });
+      }
+    });
+
+    // Get goals
+    const unsubscribeGoals = fetchGoals(uid, goalsData => {
+      setGoals(goalsData);
+      setLoading(false);
+    });
+
+    return () => {
+      unsubscribeUser();
+      unsubscribeGoals();
+    };
+  }, [navigation]);
 
   const navigateToProfile = () => {
-    console.log('Navigate to Profile');
     navigation.navigate('Profile');
   };
 
   const navigateToAddGoals = () => {
-    console.log('Navigate to AddGoals');
     navigation.navigate('AddGoals');
   };
 
   const navigateToEditGoal = goalId => {
-    console.log('Navigate to EditGoal', goalId);
     navigation.navigate('EditGoals', {goalId});
   };
 
   const navigateToAddSavings = goalId => {
-    console.log('Navigate to AddSavings', goalId);
     navigation.navigate('AddSavings', {goalId});
   };
 
@@ -49,8 +75,13 @@ const HomeWithGoals = ({navigation}) => {
       <ScrollView style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.appTitle}>TabungJo!</Text>
-          <ProfilePhoto onPress={navigateToProfile} />
+          <View>
+            <Text style={styles.appTitle}>{`Hi, ${user.username}`}</Text>
+            <Text style={styles.appSubTitle}>
+              Have you track your money today?
+            </Text>
+          </View>
+          <ProfilePhoto onPress={navigateToProfile} source={user.photo} />
         </View>
 
         {/* Banner Image */}
@@ -62,7 +93,6 @@ const HomeWithGoals = ({navigation}) => {
 
         {/* Main Content */}
         <Text style={styles.mainTitle}>Achieve Your Goals!</Text>
-
         <Text style={styles.quote}>
           "Menabung bukanlah tentang berapa banyak yang kamu simpan hari ini,
           tapi tentang bagaimana kamu membangun masa depan yang lebih cerah
@@ -73,44 +103,48 @@ const HomeWithGoals = ({navigation}) => {
         {/* Dream List */}
         <Text style={styles.dreamListTitle}>Dream List:</Text>
 
-        {goals.map(goal => (
-          <View key={goal.id} style={styles.goalCard}>
-            <Text style={styles.goalName}>{goal.name}</Text>
-
-            <View style={styles.goalInfoRow}>
-              <Text style={styles.infoLabel}>Target : </Text>
-              <Text style={styles.infoValue}>{goal.target}</Text>
-            </View>
-
-            <View style={styles.goalInfoRow}>
-              <Text style={styles.infoLabel}>Stored : </Text>
-              <Text style={styles.infoValue}>{goal.saved}</Text>
-            </View>
-
-            {/* Progress Bar */}
-            <View style={styles.progressBarContainer}>
-              <View
-                style={[styles.progressBar, {width: `${goal.progress}%`}]}
-              />
-            </View>
-
-            <Text style={styles.progressText}>{goal.progress}%</Text>
-
-            <View style={styles.buttonRow}>
-              <TouchableOpacity
-                style={styles.goalButton}
-                onPress={() => navigateToAddSavings(goal.id)}>
-                <Text style={styles.goalButtonText}>Add Savings</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.goalButton}
-                onPress={() => navigateToEditGoal(goal.id)}>
-                <Text style={styles.goalButtonText}>Edit Goals</Text>
-              </TouchableOpacity>
-            </View>
+        {goals.length === 0 && !loading ? (
+          <View style={styles.emptyStateBox}>
+            <Text style={styles.emptyStateText}>
+              No goal data has been saved yet
+            </Text>
           </View>
-        ))}
+        ) : (
+          goals.map(goal => (
+            <View key={goal.id} style={styles.goalCard}>
+              <Text style={styles.goalName}>{goal.name}</Text>
+              <View style={styles.goalInfoRow}>
+                <Text style={styles.infoLabel}>Target : </Text>
+                <Text style={styles.infoValue}>{goal.targetAmount}</Text>
+              </View>
+              <View style={styles.goalInfoRow}>
+                <Text style={styles.infoLabel}>Stored : </Text>
+                <Text style={styles.infoValue}>{goal.savedAmount || '0'}</Text>
+              </View>
+
+              {/* Progress Bar */}
+              <View style={styles.progressBarContainer}>
+                <View
+                  style={[styles.progressBar, {width: `${goal.progress}%`}]}
+                />
+              </View>
+              <Text style={styles.progressText}>{goal.progress}%</Text>
+
+              <View style={styles.buttonRow}>
+                <TouchableOpacity
+                  style={styles.goalButton}
+                  onPress={() => navigateToAddSavings(goal.id)}>
+                  <Text style={styles.goalButtonText}>Add Savings</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.goalButton}
+                  onPress={() => navigateToEditGoal(goal.id)}>
+                  <Text style={styles.goalButtonText}>Edit Goals</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))
+        )}
 
         <Gap height={20} />
 
@@ -143,18 +177,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   header: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 24,
+    paddingVertical: 37,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 35,
-    paddingHorizontal: 7,
+    justifyContent: 'space-between',
   },
   appTitle: {
-    fontFamily: 'Inter-ExtraBold',
-    fontSize: 40,
-    fontWeight: '800',
-    fontStyle: 'italic',
-    color: '#0F3E48',
+    fontFamily: 'Inter-Medium',
+    fontSize: 22,
+    color: '#020202',
+  },
+  appSubTitle: {
+    fontFamily: 'Inter-Light',
+    fontSize: 14,
+    color: '#8D92A3',
+  },
+  photo: {
+    height: 70,
+    width: 70,
+    borderRadius: 10,
   },
   bannerImage: {
     width: '100%',
@@ -249,5 +292,21 @@ const styles = StyleSheet.create({
   },
   addButtonContainer: {
     alignItems: 'center',
+  },
+  emptyStateBox: {
+    backgroundColor: '#D9D9D9',
+    height: 62,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 19,
+    marginHorizontal: 38,
+  },
+  emptyStateText: {
+    fontFamily: 'Inter-ExtraLight',
+    fontSize: 15,
+    fontWeight: '200',
+    fontStyle: 'italic',
+    color: '#000000',
+    textAlign: 'center',
   },
 });

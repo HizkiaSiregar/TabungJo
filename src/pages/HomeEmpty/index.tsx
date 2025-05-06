@@ -1,4 +1,3 @@
-// src/pages/HomeEmpty/index.js
 import React from 'react';
 import {
   View,
@@ -10,17 +9,47 @@ import {
 } from 'react-native';
 import {Button, Gap} from '../../components/atoms';
 import {ProfilePhoto} from '../../components/molecules';
+import {getAuth} from 'firebase/auth';
+import {getUserProfile} from '../../services/firebase';
+import {useState, useEffect} from 'react';
 
 const HomeEmpty = ({navigation}) => {
-  console.log('Rendering HomeEmpty');
-  
+  const [user, setUser] = useState({
+    username: '',
+    photo: null,
+  });
+
+  useEffect(() => {
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+      navigation.replace('SignIn');
+      return;
+    }
+
+    const uid = currentUser.uid;
+
+    // Get user profile
+    const unsubscribeUser = getUserProfile(uid, userData => {
+      if (userData) {
+        setUser({
+          username: userData.username || 'User',
+          photo: userData.photo ? {uri: userData.photo} : null,
+        });
+      }
+    });
+
+    return () => {
+      unsubscribeUser();
+    };
+  }, [navigation]);
+
   const navigateToProfile = () => {
-    console.log('Navigate to Profile');
     navigation.navigate('Profile');
   };
-  
+
   const navigateToAddGoals = () => {
-    console.log('Navigate to AddGoals');
     navigation.navigate('AddGoals');
   };
 
@@ -30,50 +59,48 @@ const HomeEmpty = ({navigation}) => {
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.appTitle}>TabungJo!</Text>
-          <ProfilePhoto onPress={navigateToProfile} />
+          <ProfilePhoto onPress={navigateToProfile} source={user.photo} />
         </View>
-        
+
         {/* Banner Image */}
         <Image
           source={require('../../assets/save-image.png')}
           style={styles.bannerImage}
           resizeMode="cover"
         />
-        
+
         {/* Main Content */}
         <Text style={styles.mainTitle}>Achieve Your Goals!</Text>
-        
         <Text style={styles.quote}>
-          "Menabung bukanlah tentang berapa banyak yang kamu simpan hari ini, 
-          tapi tentang bagaimana kamu membangun masa depan yang lebih cerah 
-          melalui langkah kecil yang konsisten. Setiap rupiah yang kamu sisihkan 
+          "Menabung bukanlah tentang berapa banyak yang kamu simpan hari ini,
+          tapi tentang bagaimana kamu membangun masa depan yang lebih cerah
+          melalui langkah kecil yang konsisten. Setiap rupiah yang kamu sisihkan
           adalah investasi untuk impianmu."
         </Text>
-        
+
         {/* Empty State */}
         <Text style={styles.emptyStateMessage}>
           You don't have a goal to save yet.{'\n'}
           Let's start one now!
         </Text>
-        
         <View style={styles.emptyStateBox}>
           <Text style={styles.emptyStateText}>
             No goal data has been saved yet
           </Text>
         </View>
-        
+
         <Gap height={42} />
-        
+
         {/* Add Goals Button */}
         <View style={styles.buttonContainer}>
-          <Button 
-            label="Add Goals" 
+          <Button
+            label="Add Goals"
             onPress={navigateToAddGoals}
             color="#FBC028"
             textColor="#000000"
           />
         </View>
-        
+
         <Gap height={20} />
       </ScrollView>
     </SafeAreaView>
