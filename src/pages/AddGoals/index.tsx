@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, SafeAreaView, ScrollView, Platform } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  ScrollView,
+  Platform,
+  Keyboard,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import { Button, Gap } from '../../components/atoms';
 import { Header, FormInput } from '../../components/molecules';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -28,26 +37,26 @@ const AddGoals = ({ navigation }) => {
       setLoading(true);
       const auth = getAuth();
       const user = auth.currentUser;
-      
+
       if (!user) {
         navigation.replace('SignIn');
         return;
       }
-      
+
       const goalData = {
         name: goalName,
-        targetAmount: targetAmount,
+        targetAmount,
         deadline: deadline ? deadline.toISOString() : null,
         initialSaving: initialSaving || '0',
       };
-      
+
       await createGoal(user.uid, goalData);
-      
+
       showMessage({
         message: 'Goal created successfully',
         type: 'success',
       });
-      
+
       navigation.replace('HomeWithGoals');
     } catch (error) {
       showMessage({
@@ -65,14 +74,12 @@ const AddGoals = ({ navigation }) => {
   };
 
   const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || deadline;
-    if (Platform.OS === 'android') {
-      setShowDatePicker(false);
-    }
-    setDeadline(currentDate);
+    if (Platform.OS === 'android') setShowDatePicker(false);
+    if (selectedDate) setDeadline(selectedDate);
   };
 
   const showDatepicker = () => {
+    Keyboard.dismiss();
     setShowDatePicker(true);
   };
 
@@ -81,7 +88,7 @@ const AddGoals = ({ navigation }) => {
     return date.toLocaleDateString('en-GB', {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric'
+      year: 'numeric',
     });
   };
 
@@ -91,12 +98,14 @@ const AddGoals = ({ navigation }) => {
         <Header title="Add Goals" />
         <View style={styles.content}>
           <Gap height={20} />
+
           <FormInput
             label="Goal Name"
             placeholder=""
             value={goalName}
             onChangeText={setGoalName}
           />
+
           <FormInput
             label="Nominal Target (Rp)"
             placeholder=""
@@ -104,31 +113,26 @@ const AddGoals = ({ navigation }) => {
             onChangeText={(text) => setTargetAmount(text.replace(/[^0-9]/g, ''))}
             keyboardType="numeric"
           />
-          <FormInput
-            label="Deadline Date"
-            placeholder=""
-            value={formatDate(deadline)}
-            editable={false}
-            onTouchStart={showDatepicker}
-          />
-          {(showDatePicker && Platform.OS === 'ios') && (
+
+          <TouchableOpacity style={styles.dateInputContainer} onPress={showDatepicker}>
+            <Text style={styles.label}>Deadline Date</Text>
+            <View style={styles.dateInput}>
+              <Text style={styles.dateText}>
+                {deadline ? formatDate(deadline) : 'Select a date'}
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          {showDatePicker && (
             <DateTimePicker
               value={deadline || new Date()}
               mode="date"
-              display="default"
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
               onChange={handleDateChange}
               minimumDate={new Date()}
             />
           )}
-          {(showDatePicker && Platform.OS === 'android') && (
-            <DateTimePicker
-              value={deadline || new Date()}
-              mode="date"
-              display="calendar"
-              onChange={handleDateChange}
-              minimumDate={new Date()}
-            />
-          )}
+
           <FormInput
             label="Initial Savings (Optional)"
             placeholder=""
@@ -136,21 +140,26 @@ const AddGoals = ({ navigation }) => {
             onChangeText={(text) => setInitialSaving(text.replace(/[^0-9]/g, ''))}
             keyboardType="numeric"
           />
+
           <Gap height={20} />
+
           <Button
-            label={loading ? "Creating goal..." : "Add Goal"}
+            label={loading ? 'Creating goal...' : 'Add Goal'}
             onPress={handleAddGoal}
             color="#0F3E48"
             textColor="#FFFFFF"
             disabled={loading}
           />
+
           <Gap height={15} />
+
           <Button
             label="Cancel Goal"
             onPress={handleCancel}
             color="#FBC028"
             textColor="#000000"
           />
+
           <Gap height={30} />
         </View>
       </ScrollView>
@@ -172,5 +181,26 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 24,
     paddingBottom: 40,
+  },
+  dateInputContainer: {
+    marginTop: 20,
+  },
+  label: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 6,
+    fontWeight: '500',
+  },
+  dateInput: {
+    borderWidth: 1,
+    borderColor: '#C4C4C4',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: '#F5F5F5',
+  },
+  dateText: {
+    fontSize: 16,
+    color: '#000',
   },
 });
