@@ -151,7 +151,7 @@ const AddSavings = ({ navigation, route }) => {
           />
           <Gap height={15} />
           <Button
-            label="Return"
+            label="Cancel"
             onPress={handleReturn}
             color="#FBC028"
             textColor="#000000"
