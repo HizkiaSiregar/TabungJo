@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, SafeAreaView, ScrollView, Platform, Text} from 'react-native';
+import { 
+  StyleSheet, 
+  View, 
+  Text, 
+  SafeAreaView, 
+  ScrollView, 
+  Platform, 
+  TouchableOpacity,
+  Keyboard 
+} from 'react-native';
 import { Button, Gap } from '../../components/atoms';
 import { Header, FormInput } from '../../components/molecules';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -117,18 +126,22 @@ const EditGoals = ({ navigation, route }) => {
   };
 
   const handleDateChange = (event, selectedDate) => {
-    setShowDatePicker(false);
-    if (selectedDate) {
-      setDeadline(selectedDate);
-    }
+    if (Platform.OS === 'android') setShowDatePicker(false);
+    if (selectedDate) setDeadline(selectedDate);
   };
 
   const showDatepicker = () => {
+    Keyboard.dismiss();
     setShowDatePicker(true);
   };
 
-  const formatDate = date => {
-    return date ? date.toISOString().split('T')[0] : '';
+  const formatDate = (date) => {
+    if (!date) return '';
+    return date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
   };
 
   if (loading) {
@@ -161,22 +174,27 @@ const EditGoals = ({ navigation, route }) => {
             onChangeText={text => setTargetAmount(text.replace(/[^0-9]/g, ''))}
             keyboardType="numeric"
           />
-          <FormInput
-            label="Deadline Date"
-            placeholder=""
-            value={formatDate(deadline)}
-            editable={false}
-            onTouchStart={showDatepicker}
-          />
+          
+          {/* Date Picker Component */}
+          <TouchableOpacity style={styles.dateInputContainer} onPress={showDatepicker}>
+            <Text style={styles.label}>Deadline Date</Text>
+            <View style={styles.dateInput}>
+              <Text style={styles.dateText}>
+                {deadline ? formatDate(deadline) : 'Select a date'}
+              </Text>
+            </View>
+          </TouchableOpacity>
+
           {showDatePicker && (
             <DateTimePicker
               value={deadline || new Date()}
               mode="date"
-              display="default"
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
               onChange={handleDateChange}
               minimumDate={new Date()}
             />
           )}
+          
           <Gap height={20} />
           <Button
             label={loading ? "Saving changes..." : "Save Edit"}
@@ -220,5 +238,27 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 24,
     paddingBottom: 40,
+  },
+  dateInputContainer: {
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 6,
+    fontWeight: '500',
+  },
+  dateInput: {
+    borderWidth: 1,
+    borderColor: '#C4C4C4',
+    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: '#F5F5F5',
+  },
+  dateText: {
+    fontSize: 16,
+    color: '#000',
   },
 });

@@ -30,7 +30,11 @@ const ConfirmDeleteProfile = ({navigation}) => {
         type: 'success',
       });
 
-      navigation.navigate('HomeEmpty');
+      // Reset entire navigation stack and set HomeEmpty as the only screen
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'HomeEmpty'}],
+      });
     } catch (error) {
       showMessage({
         message: 'Failed to reset data',
