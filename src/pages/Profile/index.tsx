@@ -1,56 +1,52 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
   SafeAreaView,
   ScrollView,
   Text,
-  TextInput,
   Platform,
   PermissionsAndroid,
-  ActivityIndicator,
-} from 'react-native';
-import {Button, Gap} from '../../components/atoms';
-import Header from '../../components/molecules/Header';
-import ProfilePhoto from '../../components/molecules/ProfilePhoto';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {showMessage} from 'react-native-flash-message';
-import {getAuth} from 'firebase/auth';
-import {
-  getUserProfile,
-  uploadProfilePicture,
-  updateUserProfile,
-  logOut,
-} from '../../services/firebase';
+} from "react-native";
+import { Button, Gap } from "../../components/atoms";
+import Header from "../../components/molecules/Header";
+import ProfilePhoto from "../../components/molecules/ProfilePhoto";
+import { launchImageLibrary } from "react-native-image-picker";
+import { showMessage } from "react-native-flash-message";
+import { getAuth } from "firebase/auth";
+import { getUserProfile, uploadProfilePicture, updateUserProfile, logOut, deleteUserData } from "../../services/firebase";
 
-const Profile = ({navigation}) => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
+const Profile = ({ navigation }) => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [photo, setPhoto] = useState(null);
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    if (Platform.OS === 'android') {
+    // Request permissions on Android
+    if (Platform.OS === "android") {
       requestPermissions();
     }
 
+    // Get current user
     const auth = getAuth();
     const currentUser = auth.currentUser;
 
     if (!currentUser) {
-      navigation.replace('SignIn');
+      navigation.replace("SignIn");
       return;
     }
 
     setUserId(currentUser.uid);
     setEmail(currentUser.email);
 
-    const unsubscribe = getUserProfile(currentUser.uid, userData => {
+    // Get user profile data
+    const unsubscribe = getUserProfile(currentUser.uid, (userData) => {
       if (userData) {
-        setUsername(userData.username || '');
+        setUsername(userData.username || "");
         if (userData.photo) {
-          setPhoto({uri: userData.photo});
+          setPhoto({ uri: userData.photo });
         }
       }
     });
@@ -60,112 +56,112 @@ const Profile = ({navigation}) => {
 
   const requestPermissions = async () => {
     try {
-      await PermissionsAndroid.requestMultiple([
+      const permissions = [
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-      ]);
+        PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES
+      ];
+      
+      await PermissionsAndroid.requestMultiple(permissions);
     } catch (error) {
-      console.log('Permission request error:', error);
+      console.log("Permission request error:", error);
     }
   };
 
   const handleChangePhoto = async () => {
     const options = {
-      mediaType: 'photo',
+      mediaType: "photo",
       quality: 0.5,
-      maxWidth: 300,
-      maxHeight: 300,
+      maxWidth: 200,
+      maxHeight: 200,
       includeBase64: false,
     };
 
-    try {
-      const result = await launchImageLibrary(options);
+    launchImageLibrary(options, async (response) => {
+      if (response.didCancel) {
+        return;
+      }
 
-      if (result.didCancel) return;
-
-      if (result.errorCode) {
+      if (response.errorCode) {
         showMessage({
-          message: 'Error selecting image',
-          description: result.errorMessage,
-          type: 'danger',
+          message: "Error selecting image",
+          description: response.errorMessage,
+          type: "danger",
         });
         return;
       }
 
-      if (result.assets && result.assets.length > 0) {
-        const selectedImage = result.assets[0];
-        setLoading(true);
-
+      if (response.assets && response.assets.length > 0) {
+        const asset = response.assets[0];
         try {
-          const photoUri = await uploadProfilePicture(
-            selectedImage.uri,
-            userId,
-          );
-          setPhoto({uri: photoUri});
+          setLoading(true);
+          const photoURL = await uploadProfilePicture(asset.uri, userId);
+          setPhoto({ uri: photoURL });
           showMessage({
-            message: 'Profile photo updated successfully',
-            type: 'success',
+            message: "Profile photo updated",
+            type: "success",
           });
         } catch (error) {
-          console.error('Upload failed:', error);
           showMessage({
-            message: 'Failed to update profile photo',
+            message: "Failed to update photo",
             description: error.message,
-            type: 'danger',
+            type: "danger",
           });
         } finally {
           setLoading(false);
         }
       }
-    } catch (error) {
-      console.error('Image picker error:', error);
-      showMessage({
-        message: 'Image picker error',
-        description: error.message,
-        type: 'danger',
-      });
-    }
+    });
   };
 
   const handleChangeUsername = async () => {
     if (!username.trim()) {
-      showMessage({message: 'Username cannot be empty', type: 'danger'});
+      showMessage({
+        message: "Username cannot be empty",
+        type: "danger",
+      });
       return;
     }
 
     try {
       setLoading(true);
-      await updateUserProfile(userId, {username});
-      showMessage({message: 'Username updated', type: 'success'});
+      await updateUserProfile(userId, { username });
+      showMessage({
+        message: "Username updated",
+        type: "success",
+      });
     } catch (error) {
       showMessage({
-        message: 'Failed to update username',
+        message: "Failed to update username",
         description: error.message,
-        type: 'danger',
+        type: "danger",
       });
     } finally {
       setLoading(false);
     }
   };
 
+  const handleResetData = () => {
+    navigation.navigate("ConfirmDeleteProfile");
+  };
+
   const handleLogout = async () => {
     try {
       await logOut();
-      navigation.replace('SignIn');
+      navigation.replace("SignIn");
     } catch (error) {
       showMessage({
-        message: 'Failed to log out',
+        message: "Failed to log out",
         description: error.message,
-        type: 'danger',
+        type: "danger",
       });
     }
   };
 
   const handleReturnHome = () => {
-    navigation.navigate('HomeWithGoals');
+    navigation.navigate("HomeWithGoals");
   };
 
-  const StaticInput = ({label, value}) => (
+  const StaticInput = ({ label, value }) => (
     <View style={styles.staticInputContainer}>
       <Text style={styles.label}>{label}</Text>
       <View style={styles.staticInputWrapper}>
@@ -181,43 +177,25 @@ const Profile = ({navigation}) => {
         <View style={styles.content}>
           <View style={styles.photoContainer}>
             <View style={styles.profileCircle}>
-              {loading ? (
-                <ActivityIndicator size="large" color="#0F3E48" />
-              ) : (
-                <ProfilePhoto
-                  onPress={handleChangePhoto}
-                  size={156}
-                  color="#77A6B6"
-                  source={photo}
-                />
-              )}
+              <ProfilePhoto
+                onPress={handleChangePhoto}
+                size={156}
+                color="#77A6B6"
+                source={photo}
+              />
             </View>
           </View>
-
           <Gap height={20} />
-
-          <View style={styles.staticInputContainer}>
-            <Text style={styles.label}>Username</Text>
-            <TextInput
-              style={styles.textInput}
-              value={username}
-              onChangeText={setUsername}
-              placeholder="Enter username"
-              placeholderTextColor="#999"
-            />
-          </View>
-
-          <Button
-            label="Change Username"
-            onPress={handleChangeUsername}
-            color="#77A6B6"
-            textColor="#000000"
-          />
-
-          <Gap height={20} />
+          <StaticInput label="Username" value={username} />
           <StaticInput label="Email" value={email} />
           <Gap height={20} />
-
+          <Button
+            label="Reset All Saving Data"
+            onPress={handleResetData}
+            color="#0F3E48"
+            textColor="#EBECE7"
+          />
+          <Gap height={15} />
           <Button
             label="Log Out"
             onPress={handleLogout}
@@ -243,49 +221,53 @@ export default Profile;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#EBECE7',
+    backgroundColor: "#FFFFFF",
   },
   container: {
-    paddingHorizontal: 24,
-    paddingTop: 10,
+    flex: 1,
+    backgroundColor: "#FFFFFF",
   },
   content: {
-    alignItems: 'center',
-    marginTop: 20,
+    paddingHorizontal: 24,
+    paddingBottom: 40,
   },
   photoContainer: {
-    alignItems: 'center',
-    marginBottom: 10,
+    alignItems: "center",
+    marginTop: 20,
   },
   profileCircle: {
-    borderRadius: 100,
-    overflow: 'hidden',
-    backgroundColor: '#D9D9D9',
+    width: 168,
+    height: 168,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 84,
+    borderWidth: 1,
+    borderColor: "#8D92A3",
+    borderStyle: "dashed",
   },
   staticInputContainer: {
-    width: '100%',
-    marginBottom: 15,
-  },
-  staticInputWrapper: {
-    padding: 10,
-    backgroundColor: '#F0F0F0',
-    borderRadius: 10,
-  },
-  staticInput: {
-    fontSize: 16,
-    color: '#333',
+    width: "100%",
+    alignSelf: "center",
+    marginBottom: 18,
   },
   label: {
-    marginBottom: 5,
-    fontSize: 14,
-    color: '#555',
-    fontWeight: 'bold',
+    fontSize: 13,
+    fontFamily: "Inter-SemiBold",
+    fontWeight: "600",
+    marginBottom: 6,
+    color: "#000000",
   },
-  textInput: {
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 10,
-    fontSize: 16,
-    color: '#000',
+  staticInputWrapper: {
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#0F3E48",
+    borderRadius: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    backgroundColor: "#F5F5F5",
+  },
+  staticInput: {
+    fontFamily: "Inter-Regular",
+    color: "#000000",
   },
 });

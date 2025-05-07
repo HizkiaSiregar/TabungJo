@@ -118,7 +118,7 @@ const AddGoals = ({ navigation }) => {
             <Text style={styles.label}>Deadline Date</Text>
             <View style={styles.dateInput}>
               <Text style={styles.dateText}>
-                {deadline ? formatDate(deadline) : 'Select a date'}
+                {deadline ? formatDate(deadline) : ''}
               </Text>
             </View>
           </TouchableOpacity>
@@ -154,7 +154,7 @@ const AddGoals = ({ navigation }) => {
           <Gap height={15} />
 
           <Button
-            label="Cancel Goal"
+            label="Cancel"
             onPress={handleCancel}
             color="#FBC028"
             textColor="#000000"
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   dateInput: {
     borderWidth: 1,
     borderColor: '#C4C4C4',
-    borderRadius: 8,
+    borderRadius: 5,
     paddingVertical: 12,
     paddingHorizontal: 16,
     backgroundColor: '#F5F5F5',
