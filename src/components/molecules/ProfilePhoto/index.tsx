@@ -1,6 +1,5 @@
-// src/components/molecules/ProfilePhoto/index.js
 import React from 'react';
-import {TouchableOpacity, StyleSheet, Image, View} from 'react-native';
+import {TouchableOpacity, StyleSheet, Image} from 'react-native';
 import {AccountCircle} from '../../atoms';
 
 const ProfilePhoto = ({onPress, size = 59, color = '#77A6B6', source}) => {
@@ -8,17 +7,9 @@ const ProfilePhoto = ({onPress, size = 59, color = '#77A6B6', source}) => {
     <TouchableOpacity
       style={styles.container}
       onPress={onPress}
-      activeOpacity={0.7}
-    >
+      activeOpacity={0.7}>
       {source ? (
-        <Image 
-          source={source} 
-          style={{
-            width: size,
-            height: size,
-            borderRadius: size / 2,
-          }} 
-        />
+        <Image source={source} style={styles.photo(size)} resizeMode="cover" />
       ) : (
         <AccountCircle size={size} color={color} />
       )}
@@ -30,6 +21,11 @@ export default ProfilePhoto;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 5, // Add padding for a larger touch area
+    padding: 5,
   },
+  photo: size => ({
+    width: size,
+    height: size,
+    borderRadius: size / 2,
+  }),
 });

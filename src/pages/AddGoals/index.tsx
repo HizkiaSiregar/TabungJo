@@ -1,25 +1,72 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, SafeAreaView, ScrollView, Platform } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  ScrollView,
+  Platform,
+  Keyboard,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import { Button, Gap } from '../../components/atoms';
 import { Header, FormInput } from '../../components/molecules';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { getAuth } from 'firebase/auth';
+import { createGoal } from '../../services/firebase';
+import { showMessage } from 'react-native-flash-message';
 
 const AddGoals = ({ navigation }) => {
   const [goalName, setGoalName] = useState('');
   const [targetAmount, setTargetAmount] = useState('');
-  const [deadline, setDeadline] = useState(null); // Tidak default ke tanggal hari ini
+  const [deadline, setDeadline] = useState(null);
   const [initialSaving, setInitialSaving] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleAddGoal = () => {
-    console.log('Goal Added:', {
-      name: goalName || 'Unnamed Goal',
-      targetAmount: targetAmount || '0',
-      deadline: deadline ? deadline.toISOString().split('T')[0] : '',
-      initialSaving: initialSaving || '0',
-    });
+  const handleAddGoal = async () => {
+    if (!goalName || !targetAmount) {
+      showMessage({
+        message: 'Goal name and target amount are required',
+        type: 'danger',
+      });
+      return;
+    }
 
-    navigation.replace('HomeWithGoals');
+    try {
+      setLoading(true);
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (!user) {
+        navigation.replace('SignIn');
+        return;
+      }
+
+      const goalData = {
+        name: goalName,
+        targetAmount,
+        deadline: deadline ? deadline.toISOString() : null,
+        initialSaving: initialSaving || '0',
+      };
+
+      await createGoal(user.uid, goalData);
+
+      showMessage({
+        message: 'Goal created successfully',
+        type: 'success',
+      });
+
+      navigation.replace('HomeWithGoals');
+    } catch (error) {
+      showMessage({
+        message: 'Failed to create goal',
+        description: error.message,
+        type: 'danger',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCancel = () => {
@@ -27,16 +74,12 @@ const AddGoals = ({ navigation }) => {
   };
 
   const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || deadline;
-
-    if (Platform.OS === 'android') {
-      setShowDatePicker(false);
-    }
-
-    setDeadline(currentDate);
+    if (Platform.OS === 'android') setShowDatePicker(false);
+    if (selectedDate) setDeadline(selectedDate);
   };
 
   const showDatepicker = () => {
+    Keyboard.dismiss();
     setShowDatePicker(true);
   };
 
@@ -45,7 +88,7 @@ const AddGoals = ({ navigation }) => {
     return date.toLocaleDateString('en-GB', {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric'
+      year: 'numeric',
     });
   };
 
@@ -53,7 +96,6 @@ const AddGoals = ({ navigation }) => {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
         <Header title="Add Goals" />
-
         <View style={styles.content}>
           <Gap height={20} />
 
@@ -72,29 +114,20 @@ const AddGoals = ({ navigation }) => {
             keyboardType="numeric"
           />
 
-          <FormInput
-            label="Deadline Date"
-            placeholder=""
-            value={formatDate(deadline)}
-            editable={false}
-            onTouchStart={showDatepicker}
-          />
+          <TouchableOpacity style={styles.dateInputContainer} onPress={showDatepicker}>
+            <Text style={styles.label}>Deadline Date</Text>
+            <View style={styles.dateInput}>
+              <Text style={styles.dateText}>
+                {deadline ? formatDate(deadline) : 'Select a date'}
+              </Text>
+            </View>
+          </TouchableOpacity>
 
-          {(showDatePicker && Platform.OS === 'ios') && (
+          {showDatePicker && (
             <DateTimePicker
               value={deadline || new Date()}
               mode="date"
-              display="default"
-              onChange={handleDateChange}
-              minimumDate={new Date()}
-            />
-          )}
-
-          {(showDatePicker && Platform.OS === 'android') && (
-            <DateTimePicker
-              value={deadline || new Date()}
-              mode="date"
-              display="calendar"
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
               onChange={handleDateChange}
               minimumDate={new Date()}
             />
@@ -110,16 +143,17 @@ const AddGoals = ({ navigation }) => {
 
           <Gap height={20} />
 
-          <Button 
-            label="Add Goal"
+          <Button
+            label={loading ? 'Creating goal...' : 'Add Goal'}
             onPress={handleAddGoal}
             color="#0F3E48"
             textColor="#FFFFFF"
+            disabled={loading}
           />
 
           <Gap height={15} />
 
-          <Button 
+          <Button
             label="Cancel Goal"
             onPress={handleCancel}
             color="#FBC028"
@@ -147,5 +181,26 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 24,
     paddingBottom: 40,
+  },
+  dateInputContainer: {
+    marginTop: 20,
+  },
+  label: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 6,
+    fontWeight: '500',
+  },
+  dateInput: {
+    borderWidth: 1,
+    borderColor: '#C4C4C4',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: '#F5F5F5',
+  },
+  dateText: {
+    fontSize: 16,
+    color: '#000',
   },
 });
